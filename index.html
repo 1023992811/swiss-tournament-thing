@@ -1,0 +1,32 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta charset='utf-8' />
+	<title>swiss tournament thing</title>
+</head>
+<body>
+	<label>add new player</label>
+	<input type='text' id='newPlayerName'></input>
+	<button onclick='createPlayer(document.getElementById("newPlayerName").value)'>add player</button>
+	
+	<h1 id='roundDisplay'>Round 0</h1>
+	<table id=playerList>
+		<tr>
+			<th>player name</th>
+			<th>score</th>
+			<th>Total scores</th>
+			<th>first or second</th>
+			<th>first count</th>
+			<th><button onclick=removeAllPlayers()>remove all players</button></th>
+		</tr>
+	</table>
+
+	<button onclick='initBracket()'>Initialize Bracket</button>
+	<button onclick=nextRound()>Next Round</button>
+
+	<script src='js/bracket.js'></script>
+	<script src='js/player.js'></script>
+	<script src='js/swiss.js'></script>
+</body>
+</head>
+</html>
