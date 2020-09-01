@@ -55,14 +55,17 @@ function matchPlayersInScoreBucket(scoreBucket) {
 	scoreBucket.sort(comparePlayersByFirstCount);
 	let midPoint = Math.floor((scoreBucket.length) / 2)
 	if (scoreBucket.length % 2 === 1) {
-		byePlayerIndex = findValidByePlayerIndex(scoreBucket, midPoint);
-		byePlayer = scoreBucket[byePlayerIndex];
+		let byePlayerIndex = findValidByePlayerIndex(scoreBucket, midPoint);
+		let byePlayer = scoreBucket[byePlayerIndex];
 		scoreBucket.splice(byePlayerIndex, 1);
 		scoreBucket.splice(midPoint, 0, byePlayer);
 	}
 	for (let x = 0; x < midPoint; x ++) {
 		let player1 = scoreBucket[x];
-		let player2 = scoreBucket[findValidOpponentIndex(scoreBucket, x)];
+		let player2Index = findValidOpponentIndex(scoreBucket, x);
+		let player2 = scoreBucket[player2Index];
+		scoreBucket.splice(player2Index, 1);
+		scoreBucket.splice(scoreBucket.length - x, 0, player2);
 		matchedBucket.push(player2);
 		matchedBucket.push(player1);
 		player2.newRound(playerRoundStatuses.FIRST, player1);
