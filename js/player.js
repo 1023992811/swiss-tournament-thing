@@ -1,33 +1,56 @@
-class Player {
+const playerRoundStatuses = {
+		FIRST: 1,
+		SECOND: 0,
+		BYE: 2
+};
+
+class SwissPlayer {
 	constructor(name) {
 		this.name = name;
-		this.firstCount = 0;
-		this.score = 0;
-		this.isFirst = 0;
-		this.prevPlayers = [];
-		this.bye = false;
-	}
-	
-	/*
-		function to call when this player enters a new round
-		isFirst: 0 or 1, is this player going first this round 1 for first, 0 for second
-		opponent: Player, the opponent of this player
-	*/
-	newRound(isFirst, opponent) {
-		this.isFirst = Number(isFirst);
-		if(this.isFirst === 2) {
-			this.bye = true;
-		} else {
-			this.firstCount += this.isFirst;
-			this.prevPlayers.push(opponent);
-		}
+		this.reset();
 	}
 	
 	reset() {
 		this.firstCount = 0;
 		this.score = 0;
-		this.isFirst = 0;
+		this.roundStatus = playerRoundStatuses.BYE;
 		this.prevPlayers = [];
-		this.bye = false;
+		this.hadBye = false;
+	}
+	
+	isFirst() {
+		return this.roundStatus === playerRoundStatuses.FIRST;
+	}
+	
+	isSecond() {
+		return this.roundStatus === playerRoundStatuses.SECOND;
+	}
+	
+	isBye() {
+		return this.roundStatus === playerRoundStatuses.BYE;
+	}
+	
+	isValidOpponent(opponent) {
+		for (let player of this.prevPlayers) {
+			if (player === opponent) {
+				return false;
+			}
+		}
+		return true;
+	}
+	/*
+		function to call when this player enters a new round
+		roundStatus: the status of the player this round, reference the
+		playerRoundStatuses object for possible values
+		opponent: Player, the opponent of this player
+	*/
+	newRound(roundStatus, opponent) {
+		this.roundStatus = roundStatus;
+		if (!this.isBye()) {
+			this.firstCount += roundStatus;
+			this.prevPlayers.push(opponent);
+		} else {
+			this.hadBye = true;
+		}
 	}
 }

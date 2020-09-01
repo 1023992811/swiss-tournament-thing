@@ -2,7 +2,7 @@ let players = [];
 let roundCount = 0;
 
 function createPlayer(name) {
-	players.push(new Player(name));
+	players.push(new SwissPlayer(name));
 	updateDisplay();
 }
 
@@ -23,17 +23,22 @@ function initBracket() {
 
 function nextRound() {
 	//tally all scores
-	scoreInputs = document.getElementsByClassName("scoreInput");
-	for (let x = 0; x < scoreInputs.length; x++) {
-		players[x].score += Number(scoreInputs[x].value === "" ? 0 : scoreInputs[x].value);
+	if (!done) {
+		roundCount++;
+		scoreInputs = document.getElementsByClassName("scoreInput");
+		for (let x = 0; x < scoreInputs.length; x++) {
+			players[x].score += Number(scoreInputs[x].value);
+		}
 	}
-	roundCount ++;
-	swissNextRound(players);
+	
+	//match players for next round
+	players = swissNextRound(players);
 	updateDisplay();
 }
 
 function updateDisplay() {
-	document.getElementById("roundDisplay").innerHTML = "round " + roundCount;
+	document.getElementById("nextRoundButton").disabled = done;
+	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
 	let htmlString = "<tr>\n" +
 			"<th>player name</th>\n" +
 			"<th>score</th>\n" +
@@ -45,9 +50,9 @@ function updateDisplay() {
 	for (let x = 0; x < players.length; x++) {
 		let tempString = "<tr>\n" +
 				"<td>" + String(players[x].name) + "</td>\n" +
-				"<td>" + "<input type=number class=scoreInput>" + "</td>\n" +
+				"<td>" + "<input type=number class=scoreInput value=0>" + "</td>\n" +
 				"<td>" + String(players[x].score) + "</td>\n" +
-				"<td>" + (players[x].isFirst === 0 ? "second" : (players[x].isFirst === 2 ? "bye" : "first")) + "</td>\n" +
+				"<td>" + (players[x].isFirst() ? "first" : (players[x].isSecond() ? "second" : "bye")) + "</td>\n" +
 				"<td>" + String(players[x].firstCount) + "</td>\n" +
 				"<td>" + "<button onclick=removePlayer(" + x + ")>remove</button></td>\n" +
 			"</tr>\n";

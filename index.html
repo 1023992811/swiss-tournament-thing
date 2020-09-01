@@ -2,6 +2,7 @@
 <html>
 <head>
 	<meta charset='utf-8' />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 	<title>swiss tournament thing</title>
 </head>
 <body>
@@ -21,12 +22,11 @@
 		</tr>
 	</table>
 
-	<button onclick='initBracket()'>Initialize Bracket</button>
-	<button onclick=nextRound()>Next Round</button>
+	<button onclick='initBracket()'>Start Bracket/Reset to Round 1</button>
+	<button onclick='nextRound()' id='nextRoundButton' >Next Round</button>
 
 	<script src='js/bracket.js'></script>
 	<script src='js/player.js'></script>
 	<script src='js/swiss.js'></script>
 </body>
-</head>
 </html>
