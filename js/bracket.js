@@ -40,6 +40,7 @@ function updateDisplay() {
 	document.getElementById("nextRoundButton").disabled = done;
 	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
 	let htmlString = "<tr>\n" +
+			"<th>table number</th>" +
 			"<th>player name</th>\n" +
 			"<th>score</th>\n" +
 			"<th>Total scores</th>\n" +
@@ -49,6 +50,7 @@ function updateDisplay() {
 		"</tr>\n";
 	for (let x = 0; x < players.length; x++) {
 		let tempString = "<tr>\n" +
+				"<td>" + (Math.floor(x / 2) + 1) + "</td>\n" +
 				"<td>" + String(players[x].name) + "</td>\n" +
 				"<td>" + "<input type=number class=scoreInput value=0>" + "</td>\n" +
 				"<td>" + String(players[x].score) + "</td>\n" +
