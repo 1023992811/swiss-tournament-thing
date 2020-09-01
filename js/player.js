@@ -51,6 +51,7 @@ class SwissPlayer {
 			this.prevPlayers.push(opponent);
 		} else {
 			this.hadBye = true;
+			this.firstCount++;
 		}
 	}
 }

@@ -19,25 +19,21 @@ function swissNextRound(players) {
 
 function matchPlayersByScoreBuckets(players) {
 	try {
-		let tempPlayers = duplicateList(players);
-		let matchedPlayers = [];
+		let matchedPlayers = duplicateList(players);
 		
-		tempPlayers.sort(comparePlayersByScoreAndFirstCount);
+		matchedPlayers.sort(comparePlayersByScoreAndFirstCount);
 		let bucketStart = 0;
-		let bucketEnd = findBucketEnd(tempPlayers, bucketStart);
+		let bucketEnd = findBucketEnd(matchedPlayers, bucketStart);
 		while ((bucketEnd - bucketStart) > 1 || bucketEnd < players.length) {
-			let scoreBucket = tempPlayers.slice(bucketStart, bucketEnd);
+			let scoreBucket = matchedPlayers.slice(bucketStart, bucketEnd);
 			let matchedBucket = matchPlayersInScoreBucket(scoreBucket);
-			for (let x = 0; x < matchedBucket.length - 1; x+= 2) {
-				matchedPlayers.push(matchedBucket[x]);
-				matchedPlayers.push(matchedBucket[x+1]);
+			for (let x = bucketStart; x < bucketEnd; x++) {
+				matchedPlayers[x] = matchedBucket[x-bucketStart];
 			}
-			tempPlayers[bucketEnd - 1] = matchedBucket[matchedBucket.length - 1];
-			bucketStart = bucketEnd - matchedBucket.length % 2;
-			bucketEnd = findBucketEnd(tempPlayers, bucketEnd);
+			bucketStart += matchedBucket.length - matchedBucket.length % 2;
+			bucketEnd = findBucketEnd(matchedPlayers, bucketEnd);
 			if ((bucketEnd - bucketStart) === 1) {
-				matchedBucket[matchedBucket.length-1].newRound(playerRoundStatuses.BYE);
-				matchedPlayers.push(matchedBucket[matchedBucket.length-1]);
+				matchedPlayers[matchedPlayers.length-1].newRound(playerRoundStatuses.BYE);
 			}
 		}
 		return matchedPlayers;
@@ -54,12 +50,6 @@ function matchPlayersInScoreBucket(scoreBucket) {
 	
 	scoreBucket.sort(comparePlayersByFirstCount);
 	let midPoint = Math.floor((scoreBucket.length) / 2)
-	if (scoreBucket.length % 2 === 1) {
-		let byePlayerIndex = findValidByePlayerIndex(scoreBucket, midPoint);
-		let byePlayer = scoreBucket[byePlayerIndex];
-		scoreBucket.splice(byePlayerIndex, 1);
-		scoreBucket.splice(midPoint, 0, byePlayer);
-	}
 	for (let x = 0; x < midPoint; x ++) {
 		let player1 = scoreBucket[x];
 		let player2Index = findValidOpponentIndex(scoreBucket, x);
