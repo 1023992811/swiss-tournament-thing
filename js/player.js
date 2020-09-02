@@ -54,4 +54,8 @@ class SwissPlayer {
 			this.firstCount++;
 		}
 	}
+	
+	clone() {
+		return { ...this};
+	}
 }

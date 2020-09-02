@@ -25,12 +25,12 @@ function matchPlayersByScoreBuckets(players) {
 		let bucketStart = 0;
 		let bucketEnd = findBucketEnd(matchedPlayers, bucketStart);
 		while ((bucketEnd - bucketStart) > 1 || bucketEnd < players.length) {
-			let scoreBucket = matchedPlayers.slice(bucketStart, bucketEnd);
-			let matchedBucket = matchPlayersInScoreBucket(scoreBucket);
+			let bucket = matchedPlayers.slice(bucketStart, bucketEnd);
+			bucket = matchPlayersInScoreBucket(bucket);
 			for (let x = bucketStart; x < bucketEnd; x++) {
-				matchedPlayers[x] = matchedBucket[x-bucketStart];
+				matchedPlayers[x] = bucket[x-bucketStart];
 			}
-			bucketStart += matchedBucket.length - matchedBucket.length % 2;
+			bucketStart += bucket.length - bucket.length % 2;
 			bucketEnd = findBucketEnd(matchedPlayers, bucketEnd);
 			if ((bucketEnd - bucketStart) === 1) {
 				matchedPlayers[matchedPlayers.length-1].newRound(playerRoundStatuses.BYE);
@@ -136,9 +136,22 @@ function swapListItems(list, index1, index2) {
 	list[index2] = temp;
 }
 
+function moveItemToIndex(list, itemIndex, targetIndex) {
+	temp = list[itemIndex];
+	list.splice(itemIndex, 1);
+	list.splice(targetIndex, 0, temp);
+}
+
 function duplicateList(list) {
 	let result = []
 	for (let item of list)
 		result.push(item);
+	return result;
+}
+
+function copyArrayObjects(array) {
+	let result = [];
+	for (let item of array)
+		result.push(item.clone());
 	return result;
 }

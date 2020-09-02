@@ -1,4 +1,5 @@
 let players = [];
+let lastState = [];
 let roundCount = 0;
 
 function createPlayer(name) {
@@ -22,6 +23,8 @@ function initBracket() {
 }
 
 function nextRound() {
+	lastState = copyArrayObjects(players);
+	
 	//tally all scores
 	if (!done) {
 		roundCount++;
