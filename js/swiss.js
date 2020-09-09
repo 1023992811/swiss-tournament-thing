@@ -17,6 +17,10 @@ function swissNextRound(players) {
 	return matchPlayersByScoreBuckets(players);
 }
 
+function swissEndBracket(players) {
+	return duplicateList(players).sort(comparePlayersByScoreAndFirstCount);
+}
+
 function matchPlayersByScoreBuckets(players) {
 	try {
 		let matchedPlayers = duplicateList(players);
@@ -38,10 +42,8 @@ function matchPlayersByScoreBuckets(players) {
 		}
 		return matchedPlayers;
 	} catch(error) {
-		alert("no more rounds possible");
-		done = true;
-		
-		return duplicateList(players).sort(comparePlayersByScoreAndFirstCount);
+		console.warn("1 or more players are playing against previous opponents");
+		return players;
 	}
 }
 
@@ -78,30 +80,9 @@ function findBucketEnd(players, bucketStart) {
 	return players.length;
 }
 
-function findValidByePlayerIndex(players, startPoint) {
-	let radius = 0;
-	let rightFlag = false;
-	let leftFlag = false;
-	for (;!rightFlag || !leftFlag;radius++) {
-		if (!rightFlag) {
-			rightIndex = startPoint + radius;
-			if (rightIndex >= players.length)
-				rightFlag = true;
-			else if (!players[rightIndex].hadBye)
-				return rightIndex;
-		}
-		if (!leftFlag) {
-			leftIndex = startPoint - radius;
-			if (leftIndex < 0)
-				leftFlag = true;
-			else if (!players[startPoint-radius].hadBye)
-				return startPoint - radius;
-		}
-	}
-	throw "no valid bye player"
-}
-
 function findValidOpponentIndex(players, currentPlayerIndex) {
+	// fix-me: pairing fails if the last 2 players in bracket have played eachother already
+	
 	let opponentIndex = players.length - 1 - currentPlayerIndex;
 	do {
 		if (players[currentPlayerIndex].isValidOpponent(players[opponentIndex])) {
@@ -155,3 +136,27 @@ function copyArrayObjects(array) {
 		result.push(item.clone());
 	return result;
 }
+
+/* garbage disposal
+function findValidByePlayerIndex(players, startPoint) {
+	let radius = 0;
+	let rightFlag = false;
+	let leftFlag = false;
+	for (;!rightFlag || !leftFlag;radius++) {
+		if (!rightFlag) {
+			rightIndex = startPoint + radius;
+			if (rightIndex >= players.length)
+				rightFlag = true;
+			else if (!players[rightIndex].hadBye)
+				return rightIndex;
+		}
+		if (!leftFlag) {
+			leftIndex = startPoint - radius;
+			if (leftIndex < 0)
+				leftFlag = true;
+			else if (!players[startPoint-radius].hadBye)
+				return startPoint - radius;
+		}
+	}
+	throw "no valid bye player"
+}*/

@@ -39,6 +39,11 @@ function nextRound() {
 	updateDisplay();
 }
 
+function endBracket() {
+	players = swissEndBracket(players);
+	updateDisplay();
+}
+
 function updateDisplay() {
 	document.getElementById("nextRoundButton").disabled = done;
 	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
