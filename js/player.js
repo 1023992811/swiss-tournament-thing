@@ -1,7 +1,7 @@
 const playerRoundStatuses = {
-		FIRST: 1,
-		SECOND: 0,
-		BYE: 2
+	FIRST: 1,
+	SECOND: 0,
+	BYE: 2
 };
 
 class SwissPlayer {
@@ -13,8 +13,10 @@ class SwissPlayer {
 	reset() {
 		this.firstCount = 0;
 		this.score = 0;
+		this.prevPlayerCount = 0;
 		this.roundStatus = playerRoundStatuses.BYE;
 		this.prevPlayers = [];
+		this.playersLostTo = [];
 		this.hadBye = false;
 	}
 	
@@ -30,7 +32,7 @@ class SwissPlayer {
 		return this.roundStatus === playerRoundStatuses.BYE;
 	}
 	
-	isValidOpponent(opponent) {
+	isUniqueOpponent(opponent) {
 		for (let player of this.prevPlayers) {
 			if (player === opponent) {
 				return false;
@@ -38,6 +40,7 @@ class SwissPlayer {
 		}
 		return true;
 	}
+	
 	/*
 		function to call when this player enters a new round
 		roundStatus: the status of the player this round, reference the
@@ -48,10 +51,23 @@ class SwissPlayer {
 		this.roundStatus = roundStatus;
 		if (!this.isBye()) {
 			this.firstCount += roundStatus;
-			this.prevPlayers.push(opponent);
+			if (this.isUniqueOpponent(opponent))
+				this.prevPlayers.push(opponent);
 		} else {
 			this.hadBye = true;
 			this.firstCount++;
+		}
+	}
+	
+	updatePrevPlayerCount(players) {
+		this.prevPlayerCount = 0;
+		for (let prevPlayer of this.prevPlayers) {
+			for (let player of players) {
+				if (player === prevPlayer) {
+					this.prevPlayerCount++;
+					break;
+				}
+			}
 		}
 	}
 	

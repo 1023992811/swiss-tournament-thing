@@ -55,6 +55,7 @@ function updateDisplay() {
 			"<th>first or second</th>\n" +
 			"<th>first count</th>\n" +
 			"<th><button onclick=removeAllPlayers()>remove all players</button></th>\n" +
+			"<th>had bye</th>\n" +
 		"</tr>\n";
 	for (let x = 0; x < players.length; x++) {
 		let tempString = "<tr>\n" +
@@ -65,6 +66,7 @@ function updateDisplay() {
 				"<td>" + (players[x].isFirst() ? "first" : (players[x].isSecond() ? "second" : "bye")) + "</td>\n" +
 				"<td>" + String(players[x].firstCount) + "</td>\n" +
 				"<td>" + "<button onclick=removePlayer(" + x + ")>remove</button></td>\n" +
+				"<td>" + players[x].hadBye + "</td>\n" +
 			"</tr>\n";
 		htmlString = htmlString.concat(tempString);
 	}
