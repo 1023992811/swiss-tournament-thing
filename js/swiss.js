@@ -77,6 +77,12 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 
 function matchRemainingPlayers(scoreBucket) {
 	let matchedPlayers = [];
+	let byePlayer = null;
+	if (scoreBucket.length % 2 === 1) {
+		randomIndex = Math.floor(Math.random() * scoreBucket.length);
+		byePlayer = scoreBucket[randomIndex];
+		scoreBucket.splice(randomIndex, 1);
+	}
 	
 	let midPoint = Math.floor(scoreBucket.length / 2);
 	for (let x = 0; x < midPoint; x++) {
@@ -87,8 +93,8 @@ function matchRemainingPlayers(scoreBucket) {
 		matchedPlayers.push(firstPlayer);
 		matchedPlayers.push(secondPlayer);
 	}
-	if (scoreBucket.length % 2 === 1)
-		matchedPlayers.push(scoreBucket[midPoint]);
+	if (byePlayer !== null)
+		matchedPlayers.push(byePlayer);
 	return matchedPlayers;
 }
 
