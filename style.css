@@ -1,0 +1,59 @@
+body {
+  background-color: #fcfcfc;
+}
+
+#playerList {
+  text-transform: capitalize;
+}
+
+#vangSwissRow {
+  margin-bottom: 0;
+  padding-bottom: 500px;
+}
+
+#vanguardApp {
+  margin: 0 auto;
+  margin-top: 5%;
+  width: 80%;
+}
+
+#tournamentTitle {
+  font-family: Montserrat, sans-serif;
+  font-weight: bold;
+  text-align: center;
+}
+
+#vanguardHead {
+  margin: 0 auto;
+  width: 80%;
+}
+
+#newPlayerName {
+  width: 10%;
+}
+
+#tournamentInfo {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  width: 80%;
+  margin: 0 auto;
+  margin-top: 5%;
+}
+
+#tournamentButtons {
+  margin: 0 auto;
+  margin-top: 2%;
+}
+
+#roundDisplay {
+  text-align: center;
+}
+
+#addPlayerSection {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  margin: 0 auto;
+}
