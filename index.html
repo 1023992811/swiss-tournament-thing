@@ -30,6 +30,7 @@
             onclick='createPlayer(document.getElementById("newPlayerName").value)'
             type="button"
             class="btn btn-primary"
+            id="addPlayerButton"
           >
             Add Player
           </button>
@@ -106,5 +107,15 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
+    <script>
+      // input field triggered by enter
+      let input = document.getElementById("newPlayerName");
+      input.addEventListener("keyup", (event) => {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          document.getElementById("addPlayerButton").click();
+        }
+      });
+    </script>
   </body>
 </html>
