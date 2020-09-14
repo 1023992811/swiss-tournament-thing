@@ -86,12 +86,21 @@
       </div>
     </div>
     <footer></footer>
-
+    
     <script src="js/bracket.js"></script>
     <script src="js/player.js"></script>
     <script src="js/swiss.js"></script>
-
-    <!-- Boostrap -->
+    <script>
+      // input field triggered by enter
+      let input = document.getElementById("newPlayerName");
+      input.addEventListener("keyup", (event) => {
+        if (event.keyCode === 13) {
+          event.preventDefault();
+          document.getElementById("addPlayerButton").click();
+        }
+      });
+    </script>
+      <!-- Boostrap -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
@@ -107,15 +116,5 @@
       integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
       crossorigin="anonymous"
     ></script>
-    <script>
-      // input field triggered by enter
-      let input = document.getElementById("newPlayerName");
-      input.addEventListener("keyup", (event) => {
-        if (event.keyCode === 13) {
-          event.preventDefault();
-          document.getElementById("addPlayerButton").click();
-        }
-      });
-    </script>
   </body>
 </html>
