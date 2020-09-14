@@ -1,35 +1,110 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
-<head>
-	<meta charset='utf-8' />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-	<title>swiss tournament thing</title>
-</head>
-<body>
-	<label>add new player</label>
-	<input type='text' id='newPlayerName'></input>
-	<button onclick='createPlayer(document.getElementById("newPlayerName").value)'>add player</button>
-	
-	<h1 id='roundDisplay'>Round 0</h1>
-	<table id=playerList>
-		<tr>
-			<th>table number</th>
-			<th>player name</th>
-			<th>score</th>
-			<th>Total scores</th>
-			<th>first or second</th>
-			<th>first count</th>
-			<th><button onclick=removeAllPlayers()>remove all players</button></th>
-			<th>had bye</th>
-		</tr>
-	</table>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Swiss Tournament Thing</title>
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="vanguardApp">
+      <div id="vanguardHead">
+        <h1 id="tournamentTitle">Swiss Tournament</h1>
+        <div id="addPlayerSection">
+          <div class="form-group">
+            <label for="newPlayerInput">Add New Player</label>
+            <input
+              type="text"
+              id="newPlayerName"
+              class="form-control"
+              placeholder="name here"
+            />
+          </div>
+          <button
+            onclick='createPlayer(document.getElementById("newPlayerName").value)'
+            type="button"
+            class="btn btn-primary"
+          >
+            Add Player
+          </button>
+        </div>
+      </div>
 
-	<button onclick='initBracket()'>Start Bracket/Reset to Round 1</button>
-	<button onclick='nextRound()' id='nextRoundButton' >Next Round</button>
-	<button onclick='endBracket()'>End Bracket</button>
+      <div id="tournamentInfo">
+        <h1 id="roundDisplay">Round 0</h1>
+        <table id="playerList">
+          <tr id="vangSwissRow">
+            <th>table number</th>
+            <th>player name</th>
+            <th>score</th>
+            <th>Total scores</th>
+            <th>first or second</th>
+            <th>first count</th>
+            <th>
+              <button
+                onclick="removeAllPlayers()"
+                type="button"
+                class="btn btn-danger"
+              >
+                Remove All Players
+              </button>
+            </th>
+            <th>had bye</th>
+          </tr>
+        </table>
+        <div id="tournamentButtons">
+          <button
+            onclick="initBracket()"
+            type="button"
+            class="btn btn-secondary"
+          >
+            Start Bracket/Reset to Round 1
+          </button>
+          <button
+            onclick="nextRound()"
+            id="nextRoundButton"
+            type="button"
+            class="btn btn-secondary"
+          >
+            Next Round
+          </button>
+          <button
+            onclick="endBracket()"
+            type="button"
+            class="btn btn-secondary"
+          >
+            End Bracket
+          </button>
+        </div>
+      </div>
+    </div>
+    <footer></footer>
 
-	<script src='js/bracket.js'></script>
-	<script src='js/player.js'></script>
-	<script src='js/swiss.js'></script>
-</body>
+    <script src="js/bracket.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/swiss.js"></script>
+
+    <!-- Boostrap -->
+    <script
+      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+      crossorigin="anonymous"
+    ></script>
+    <script
+      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+      crossorigin="anonymous"
+    ></script>
+  </body>
 </html>
