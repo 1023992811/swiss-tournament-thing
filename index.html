@@ -7,8 +7,8 @@
 </head>
 <body>
 	<label>add new player</label>
-	<input type='text' id='newPlayerName'></input>
-	<button onclick='createPlayer(document.getElementById("newPlayerName").value)'>add player</button>
+	<input type='text' id='newPlayerName'>
+	<button id=addPlayerButton onclick='createPlayer(document.getElementById("newPlayerName").value)'>add player</button>
 	
 	<h1 id='roundDisplay'>Round 0</h1>
 	<table id=playerList>
@@ -31,5 +31,15 @@
 	<script src='js/bracket.js'></script>
 	<script src='js/player.js'></script>
 	<script src='js/swiss.js'></script>
+	<script>
+		// input field triggered by enter
+		let input = document.getElementById("newPlayerName");
+		input.addEventListener("keyup", (event) => {
+			if (event.keyCode === 13) {
+				event.preventDefault();
+				document.getElementById("addPlayerButton").click();
+			}
+		}); 
+	</script>
 </body>
 </html>
