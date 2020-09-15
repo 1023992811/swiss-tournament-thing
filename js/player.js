@@ -1,10 +1,10 @@
-const playerRoundStatuses = {
-	FIRST: 1,
-	SECOND: 0,
-	BYE: 2
-};
-
 class SwissPlayer {
+	static roundStatuses = {
+		FIRST: 1,
+		SECOND: 0,
+		BYE: 2
+	}
+	
 	constructor(name) {
 		this.name = name;
 		this.reset();
@@ -14,22 +14,22 @@ class SwissPlayer {
 		this.firstCount = 0;
 		this.score = 0;
 		this.prevPlayerCount = 0;
-		this.roundStatus = playerRoundStatuses.BYE;
+		this.roundStatus = SwissPlayer.roundStatuses.BYE;
 		this.prevPlayers = [];
 		this.playersLostTo = [];
 		this.hadBye = false;
 	}
 	
 	isFirst() {
-		return this.roundStatus === playerRoundStatuses.FIRST;
+		return this.roundStatus === SwissPlayer.roundStatuses.FIRST;
 	}
 	
 	isSecond() {
-		return this.roundStatus === playerRoundStatuses.SECOND;
+		return this.roundStatus === SwissPlayer.roundStatuses.SECOND;
 	}
 	
 	isBye() {
-		return this.roundStatus === playerRoundStatuses.BYE;
+		return this.roundStatus === SwissPlayer.roundStatuses.BYE;
 	}
 	
 	isUniqueOpponent(opponent) {
@@ -69,6 +69,10 @@ class SwissPlayer {
 				}
 			}
 		}
+	}
+	
+	updateBuchholzScore() {
+		this.bucholzScore = 0;
 	}
 	
 	clone() {

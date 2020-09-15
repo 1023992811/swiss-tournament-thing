@@ -1,31 +1,118 @@
 var done = false;
+let roundCount = 0;
 
-function swissInitBracket(players) {
+function updateDisplay() {
+	let players = playerPool.players;
+	document.getElementById("nextRoundButton").disabled = done;
+	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
+	let htmlString =
+		"<tr>\n" +
+		"<th>table number</th>" +
+		"<th>player name</th>\n" +
+		"<th>score</th>\n" +
+		"<th>Total scores</th>\n" +
+		"<th>first or second</th>\n" +
+		"<th>first count</th>\n" +
+		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
+		"<th>had bye</th>\n" +
+		"</tr>\n";
+	for (let x = 0; x < players.length; x++) {
+		let tempString =
+			"<tr>\n" +
+			"<td>" +
+			(Math.floor(x / 2) + 1) +
+			"</td>\n" +
+			"<td>" +
+			String(players[x].name) +
+			"</td>\n" +
+			"<td>" +
+			"<input type=number class=scoreInput value=0>" +
+			"</td>\n" +
+			"<td>" +
+			String(players[x].score) +
+			"</td>\n" +
+			"<td>" +
+			(players[x].isFirst()
+				? "first"
+				: players[x].isSecond()
+				? "second"
+				: "bye") +
+			"</td>\n" +
+			"<td>" +
+		String(players[x].firstCount) +
+		"</td>\n" +
+		"<td>" +
+		"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
+		x +
+		")>Remove</button></td>\n" +
+		"<td>" +
+		players[x].hadBye +
+		"</td>\n" +
+		"</tr>\n";
+		htmlString = htmlString.concat(tempString);
+	}
+	document.getElementById("playerList").innerHTML = htmlString;
+}
+
+function removeConfirmation(playerCell) {
+  if (window.confirm("Do you really want to remove this player?")) {
+	playerPool.removePlayer(playerCell);
+	updateDisplay();
+  }
+}
+
+function removeAllPlayersConfirmation() {
+  if (
+	window.confirm(
+	  "You're about to remove all players.  Do you want to proceed?"
+	)
+  ) {
+	playerPool.removeAllPlayers();
+	updateDisplay();
+  }
+}
+
+function swissCreatePlayer(name) {
+	playerPool.createPlayer(name);
+	updateDisplay();
+}
+
+function swissInitBracket() {
+	let players = playerPool.players;
 	//swissSeedPlayers();
 	
 	done = false;
-	resetAllPlayers(players);
+	playerPool.resetAllPlayers();
 	for (let x = 0; x < players.length - 1; x += 2) {
-		players[x].newRound(playerRoundStatuses.FIRST, players[x+1]);
-		players[x+1].newRound(playerRoundStatuses.SECOND, players[x]);
+		players[x].newRound(SwissPlayer.roundStatuses.FIRST, players[x+1]);
+		players[x+1].newRound(SwissPlayer.roundStatuses.SECOND, players[x]);
 	}
 	if (players.length % 2 === 1)
-		players[players.length-1].newRound(playerRoundStatuses.BYE);
+		players[players.length-1].newRound(SwissPlayer.roundStatuses.BYE);
+	
+	updateDisplay();
 }
 
-function swissNextRound(players) {
-	return matchPlayersByScoreBuckets(players);
+function swissNextRound() {
+	let players = playerPool.players;
+	playerPool.tallyScores();
+	roundCount++
+	playerPool.players = matchPlayersByScoreBuckets(players);
+	updateDisplay();
 }
 
-function swissEndBracket(players) {
+function swissEndBracket() {
 	done = true;
-	return duplicateList(players).sort(comparePlayersByScoreAndFirstCount);
+	let players = playerPool.players;
+	playerPool.players = players.sort(comparePlayersByScore);
+	updateDisplay();
 }
 
-function matchPlayersByScoreBuckets(players) {
+function matchPlayersByScoreBuckets() {
+	let players = playerPool.players;
 	let matchedPlayers = duplicateList(players);
 	
-	matchedPlayers.sort(comparePlayersByScoreAndFirstCount);
+	matchedPlayers.sort(comparePlayersByScore);
 	let bucketStart = 0;
 	let bucketEnd = findScoreBucketEnd(matchedPlayers, bucketStart);
 	while ((bucketEnd - bucketStart) > 1 || bucketEnd < players.length) {
@@ -37,7 +124,7 @@ function matchPlayersByScoreBuckets(players) {
 		bucketStart += bucket.length - bucket.length % 2;
 		bucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
 		if ((bucketEnd - bucketStart) === 1) {
-			matchedPlayers[matchedPlayers.length-1].newRound(playerRoundStatuses.BYE);
+			matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.roundStatuses.BYE);
 		}
 	}
 	return matchedPlayers;
@@ -65,8 +152,8 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 				continue;
 			let firstPlayer = opponentIndex > x ? opponentIndex : x;
 			let secondPlayer = opponentIndex < x ? opponentIndex : x;
-			scoreBucket[firstPlayer].newRound(playerRoundStatuses.FIRST, scoreBucket[secondPlayer]);
-			scoreBucket[secondPlayer].newRound(playerRoundStatuses.SECOND, scoreBucket[firstPlayer]);
+			scoreBucket[firstPlayer].newRound(SwissPlayer.roundStatuses.FIRST, scoreBucket[secondPlayer]);
+			scoreBucket[secondPlayer].newRound(SwissPlayer.roundStatuses.SECOND, scoreBucket[firstPlayer]);
 			matchedPlayers = matchedPlayers.concat(scoreBucket.splice(firstPlayer, 1));
 			matchedPlayers = matchedPlayers.concat(scoreBucket.splice(secondPlayer, 1));
 		}
@@ -88,8 +175,8 @@ function matchRemainingPlayers(scoreBucket) {
 	for (let x = 0; x < midPoint; x++) {
 		let firstPlayer = scoreBucket[scoreBucket.length - 1 - x];
 		let secondPlayer = scoreBucket[x];
-		firstPlayer.newRound(playerRoundStatuses.FIRST, secondPlayer);
-		secondPlayer.newRound(playerRoundStatuses.SECOND, firstPlayer);
+		firstPlayer.newRound(SwissPlayer.roundStatuses.FIRST, secondPlayer);
+		secondPlayer.newRound(SwissPlayer.roundStatuses.SECOND, firstPlayer);
 		matchedPlayers.push(firstPlayer);
 		matchedPlayers.push(secondPlayer);
 	}
@@ -98,16 +185,9 @@ function matchRemainingPlayers(scoreBucket) {
 	return matchedPlayers;
 }
 
-function findPrevOpponentIndex(player, players) {
-	result = -1;
-	for (let x = 0;x < player.prevPlayers.length && result === -1;x++) {
-		for(let x = 0;y < players.length && result === -1;y++) {
-			if (player.prevPlayers[x] === players[y]) {
-				result = y;
-			}
-		}
-	}
-	return result;
+function updateAllPrevPlayerCount(players) {
+	for (let player of players)
+		player.updatePrevPlayerCount(players);
 }
 
 function findUniqueOpponentIndex(currentPlayerIndex, players) {
@@ -137,22 +217,8 @@ function findScoreBucketEnd(players, bucketStart) {
 	return players.length;
 }
 
-function updateAllPrevPlayerCount(players) {
-	for (let player of players)
-		player.updatePrevPlayerCount(players);
-}
-
-function resetAllPlayers(players) {
-	for (let player of players)
-		player.reset();
-}
-
-function comparePlayersByScoreAndFirstCount(a, b) {
-	result = b.score - a.score;
-	if (result === 0) {
-		result = a.firstCount - b.firstCount;
-	}
-	return result;
+function comparePlayersByScore(a, b) {
+	return b.score - a.score;
 }
 
 function comparePlayersByFirstCount(a, b) {
@@ -223,8 +289,8 @@ function matchPlayersInScoreBucket(scoreBucket) {
 		scoreBucket.splice(scoreBucket.length - x, 0, player2);
 		matchedBucket.push(player2);
 		matchedBucket.push(player1);
-		player2.newRound(playerRoundStatuses.FIRST, player1);
-		player1.newRound(playerRoundStatuses.SECOND, player2);
+		player2.newRound(SwissPlayer.roundStatuses.FIRST, player1);
+		player1.newRound(SwissPlayer.roundStatuses.SECOND, player2);
 	}
 	if (scoreBucket.length % 2 === 1)
 		matchedBucket.push(scoreBucket[midPoint]);

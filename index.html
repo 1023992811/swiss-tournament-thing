@@ -27,7 +27,7 @@
             />
           </div>
           <button
-            onclick='createPlayer(document.getElementById("newPlayerName").value)'
+            onclick='swissCreatePlayer(document.getElementById("newPlayerName").value)'
             type="button"
             class="btn btn-primary"
             id="addPlayerButton"
@@ -49,7 +49,7 @@
             <th>first count</th>
             <th>
               <button
-                onclick="removeAllPlayers()"
+                onclick="removeAllPlayersConfirmation()"
                 type="button"
                 class="btn btn-danger"
               >
@@ -61,14 +61,14 @@
         </table>
         <div id="tournamentButtons">
           <button
-            onclick="initBracket()"
+            onclick="swissInitBracket()"
             type="button"
             class="btn btn-secondary"
           >
             Start Bracket/Reset to Round 1
           </button>
           <button
-            onclick="nextRound()"
+            onclick="swissNextRound()"
             id="nextRoundButton"
             type="button"
             class="btn btn-secondary"
@@ -76,7 +76,7 @@
             Next Round
           </button>
           <button
-            onclick="endBracket()"
+            onclick="swissEndBracket()"
             type="button"
             class="btn btn-secondary"
           >
@@ -87,7 +87,7 @@
     </div>
     <footer></footer>
     
-    <script src="js/bracket.js"></script>
+    <script src="js/playerPool.js"></script>
     <script src="js/player.js"></script>
     <script src="js/swiss.js"></script>
     <script>
