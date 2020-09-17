@@ -1,12 +1,21 @@
 var done = false;
 let roundCount = 0;
 
+//display section
 function updateDisplay() {
 	let players = playerPool.players;
 	document.getElementById("nextRoundButton").disabled = done;
 	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
-	let htmlString =
-		"<tr>\n" +
+	let htmlString = playerListHeader;
+	for (let x = 0; x < players.length; x++) {
+		let tableRow = getPlayerListTableRow(x, players);
+		htmlString = htmlString.concat(tableRow);
+	}
+	document.getElementById("playerList").innerHTML = htmlString;
+}
+
+const playerListHeader = 
+	"<tr>\n" +
 		"<th>table number</th>" +
 		"<th>player name</th>\n" +
 		"<th>score</th>\n" +
@@ -15,43 +24,61 @@ function updateDisplay() {
 		"<th>first count</th>\n" +
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 		"<th>had bye</th>\n" +
-		"</tr>\n";
-	for (let x = 0; x < players.length; x++) {
-		let tempString =
-			"<tr>\n" +
-			"<td>" +
-			(Math.floor(x / 2) + 1) +
-			"</td>\n" +
-			"<td>" +
-			String(players[x].name) +
-			"</td>\n" +
-			"<td>" +
-			"<input type=number class=scoreInput value=0>" +
-			"</td>\n" +
-			"<td>" +
-			String(players[x].score) +
-			"</td>\n" +
-			"<td>" +
-			(players[x].isFirst()
-				? "first"
-				: players[x].isSecond()
-				? "second"
-				: "bye") +
-			"</td>\n" +
-			"<td>" +
-		String(players[x].firstCount) +
+	"</tr>\n";
+
+function getPlayerListTableRow(rowNum, players) {
+	let tableRow =
+		"<tr>\n" +
+		"<td>" +
+		(Math.floor(rowNum / 2) + 1) +
+		"</td>\n" +
+		"<td>" +
+		String(players[rowNum].name) +
+		"</td>\n" +
+		"<td>" +
+		"<input type=number class=scoreInput value=0>" +
+		"</td>\n" +
+		"<td>" +
+		String(players[rowNum].score) +
+		"</td>\n" +
+		"<td>" +
+		(players[rowNum].isFirst()
+			? "first"
+			: players[rowNum].isSecond()
+			? "second"
+			: "bye") +
+		"</td>\n" +
+		"<td>" +
+		String(players[rowNum].firstCount) +
 		"</td>\n" +
 		"<td>" +
 		"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
-		x +
+		rowNum +
 		")>Remove</button></td>\n" +
 		"<td>" +
-		players[x].hadBye +
+		players[rowNum].hadBye +
 		"</td>\n" +
 		"</tr>\n";
-		htmlString = htmlString.concat(tempString);
-	}
-	document.getElementById("playerList").innerHTML = htmlString;
+	return tableRow;
+}
+
+const tieBreakerListHeader = 
+	"<tr>\n" +
+		"<th>placement</th>" +
+		"<th>player name</th>\n" +
+		"<th>Total scores</th>\n" +
+		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
+	"</tr>\n";
+
+function getTieBreakerListTableRow(rowNum, players) {
+	let tableRow = 
+		"<tr>\n" +
+		"<th>" + rowNum + "</th>" +
+		"<th>" + String(players[rowNum].name) + "</th>\n" +
+		"<th>" + String(players[rowNum].score) + "</th>\n" +
+		"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
+		"</tr>\n";
+	return tableRow;
 }
 
 function removeConfirmation(playerCell) {
@@ -72,6 +99,8 @@ function removeAllPlayersConfirmation() {
   }
 }
 
+//backend section
+
 function swissCreatePlayer(name) {
 	playerPool.createPlayer(name);
 	updateDisplay();
@@ -82,6 +111,7 @@ function swissInitBracket() {
 	//swissSeedPlayers();
 	
 	done = false;
+	roundCount = 1;
 	playerPool.resetAllPlayers();
 	for (let x = 0; x < players.length - 1; x += 2) {
 		players[x].newRound(SwissPlayer.roundStatuses.FIRST, players[x+1]);
@@ -94,10 +124,10 @@ function swissInitBracket() {
 }
 
 function swissNextRound() {
-	let players = playerPool.players;
 	playerPool.tallyScores();
-	roundCount++
-	playerPool.players = matchPlayersByScoreBuckets(players);
+	roundCount++;
+	playerPool.players = matchPlayersByScoreBuckets(playerPool.players);
+	debugHelper.logUniquePairsCount(playerPool.players);
 	updateDisplay();
 }
 
