@@ -51,7 +51,7 @@ class SwissPlayer {
 	newRound(roundStatus, opponent) {
 		if(this.currentOpponent !== null) {
 			if (this.isUniqueOpponent(this.currentOpponent)) {
-				this.prevPlayers.push(this.currentOpponent)
+				this.prevPlayers.push(this.currentOpponent);
 			}
 		}
 		this.roundStatus = roundStatus;
@@ -60,18 +60,16 @@ class SwissPlayer {
 			this.currentOpponent = opponent;
 		} else {
 			this.hadBye = true;
+			this.currentOpponent = null;
 			this.firstCount++;
 		}
 	}
 	
 	updatePrevPlayerCount(players) {
 		this.prevPlayerCount = 0;
-		for (let prevPlayer of this.prevPlayers) {
-			for (let player of players) {
-				if (player === prevPlayer) {
-					this.prevPlayerCount++;
-					break;
-				}
+		for (let player of players) {
+			if (!this.isUniqueOpponent(player)) {
+				this.prevPlayerCount++;
 			}
 		}
 	}

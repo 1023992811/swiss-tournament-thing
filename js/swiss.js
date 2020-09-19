@@ -1,16 +1,15 @@
-var done = false;
+let bracketEnded = false;
 let roundCount = 0;
 
 //display section
 function updateDisplay() {
 	let players = playerPool.players;
-	document.getElementById("nextRoundButton").disabled = done;
+	document.getElementById("nextRoundButton").disabled = bracketEnded;
 	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
-	if (done)
+	if (bracketEnded)
 		displayPlacementList(players);
 	else 
 		displayPairsList(players);
-	
 }
 
 function displayPairsList(players) {
@@ -127,21 +126,24 @@ function swissInitBracket() {
 	let players = playerPool.players;
 	//swissSeedPlayers();
 	
-	done = false;
+	bracketEnded = false;
 	roundCount = 1;
 	playerPool.resetAllPlayers();
+	
 	for (let x = 0; x < players.length - 1; x += 2) {
 		players[x].newRound(SwissPlayer.roundStatuses.FIRST, players[x+1]);
 		players[x+1].newRound(SwissPlayer.roundStatuses.SECOND, players[x]);
 	}
+	
 	if (players.length % 2 === 1)
 		players[players.length-1].newRound(SwissPlayer.roundStatuses.BYE);
 	
+	debugHelper.logUniquePairsCount(players);
 	updateDisplay();
 }
 
 function swissNextRound() {
-	debugHelper.updateLastState(playerPool.players);
+	debugHelper.lastState = playerPool.players;
 	roundCount++;
 	playerPool.tallyScores();
 	playerPool.players = matchPlayersByScoreBuckets(playerPool.players);
@@ -150,7 +152,7 @@ function swissNextRound() {
 }
 
 function swissEndBracket() {
-	done = true;
+	bracketEnded = true;
 	let players = playerPool.players;
 	playerPool.players = players.sort(comparePlayersByScore);
 	updateDisplay();
@@ -179,7 +181,7 @@ function matchPlayersByScoreBuckets() {
 }
 
 function matchPlayersInScoreBucket(scoreBucket) {
-	let matchedBucket = []
+	let matchedBucket = [];
 	updateAllPrevPlayerCount(scoreBucket);
 	scoreBucket.sort(comparePlayersByPriorityAndFirstCount);
 	
@@ -191,7 +193,7 @@ function matchPlayersInScoreBucket(scoreBucket) {
 }
 
 function matchPlayersWithPriority(priority, scoreBucket) {
-	matchedPlayers = []
+	matchedPlayers = [];
 	
 	for (let x = scoreBucket.length - 1; x >= 0; x--) {
 		if (scoreBucket[x].prevPlayerCount === priority) {

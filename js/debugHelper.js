@@ -1,9 +1,6 @@
 let debugHelper = {
 	lastState: [],
-	
-	updateLastState: function(players) {
-		this.lastState = players;
-	},
+	bucketMarkers: [],
 	
 	logUniquePairsCount: function(players) {
 		let pairsCount = Math.floor(players.length / 2);
