@@ -1,6 +1,5 @@
 let playerPool = {
 	players: [],
-	lastState: [],
 
 	createPlayer: function(name) {
 		this.players.push(new SwissPlayer(name));

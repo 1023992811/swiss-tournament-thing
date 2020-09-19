@@ -6,15 +6,32 @@ function updateDisplay() {
 	let players = playerPool.players;
 	document.getElementById("nextRoundButton").disabled = done;
 	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
-	let htmlString = playerListHeader;
+	if (done)
+		displayPlacementList(players);
+	else 
+		displayPairsList(players);
+	
+}
+
+function displayPairsList(players) {
+	let htmlString = pairsListHeader;
 	for (let x = 0; x < players.length; x++) {
-		let tableRow = getPlayerListTableRow(x, players);
+		let tableRow = getPairsListTableRow(x, players);
 		htmlString = htmlString.concat(tableRow);
 	}
 	document.getElementById("playerList").innerHTML = htmlString;
 }
 
-const playerListHeader = 
+function displayPlacementList(players) {
+	let htmlString = placementListHeader;
+	for (let x = 0; x < players.length; x++) {
+		let tableRow = getPlacementListTableRow(x, players);
+		htmlString = htmlString.concat(tableRow);
+	}
+	document.getElementById("playerList").innerHTML = htmlString;
+}
+
+const pairsListHeader = 
 	"<tr>\n" +
 		"<th>table number</th>" +
 		"<th>player name</th>\n" +
@@ -26,7 +43,7 @@ const playerListHeader =
 		"<th>had bye</th>\n" +
 	"</tr>\n";
 
-function getPlayerListTableRow(rowNum, players) {
+function getPairsListTableRow(rowNum, players) {
 	let tableRow =
 		"<tr>\n" +
 		"<td>" +
@@ -62,7 +79,7 @@ function getPlayerListTableRow(rowNum, players) {
 	return tableRow;
 }
 
-const tieBreakerListHeader = 
+const placementListHeader = 
 	"<tr>\n" +
 		"<th>placement</th>" +
 		"<th>player name</th>\n" +
@@ -70,13 +87,13 @@ const tieBreakerListHeader =
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"</tr>\n";
 
-function getTieBreakerListTableRow(rowNum, players) {
+function getPlacementListTableRow(rowNum, players) {
 	let tableRow = 
 		"<tr>\n" +
-		"<th>" + rowNum + "</th>" +
-		"<th>" + String(players[rowNum].name) + "</th>\n" +
-		"<th>" + String(players[rowNum].score) + "</th>\n" +
-		"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
+		"<td>" + (rowNum+1) + "</td>" +
+		"<td>" + String(players[rowNum].name) + "</td>\n" +
+		"<td>" + String(players[rowNum].score) + "</td>\n" +
+		"<td><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
 		"</tr>\n";
 	return tableRow;
 }
@@ -124,8 +141,9 @@ function swissInitBracket() {
 }
 
 function swissNextRound() {
-	playerPool.tallyScores();
+	debugHelper.updateLastState(playerPool.players);
 	roundCount++;
+	playerPool.tallyScores();
 	playerPool.players = matchPlayersByScoreBuckets(playerPool.players);
 	debugHelper.logUniquePairsCount(playerPool.players);
 	updateDisplay();
@@ -163,7 +181,7 @@ function matchPlayersByScoreBuckets() {
 function matchPlayersInScoreBucket(scoreBucket) {
 	let matchedBucket = []
 	updateAllPrevPlayerCount(scoreBucket);
-	scoreBucket.sort(comparePlayersByFirstCount);
+	scoreBucket.sort(comparePlayersByPriorityAndFirstCount);
 	
 	for (let priority = scoreBucket.length - 2; priority > 0; priority--) {
 		matchedBucket = matchedBucket.concat(matchPlayersWithPriority(priority, scoreBucket));
@@ -175,8 +193,8 @@ function matchPlayersInScoreBucket(scoreBucket) {
 function matchPlayersWithPriority(priority, scoreBucket) {
 	matchedPlayers = []
 	
-	for (let x = 0; x < scoreBucket.length; x++) {
-		if (scoreBucket[x].prevPlayerCount % (scoreBucket.length - 1) === priority) {
+	for (let x = scoreBucket.length - 1; x >= 0; x--) {
+		if (scoreBucket[x].prevPlayerCount === priority) {
 			opponentIndex = findUniqueOpponentIndex(x, scoreBucket);
 			if (opponentIndex === -1)
 				continue;
@@ -186,6 +204,7 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 			scoreBucket[secondPlayer].newRound(SwissPlayer.roundStatuses.SECOND, scoreBucket[firstPlayer]);
 			matchedPlayers = matchedPlayers.concat(scoreBucket.splice(firstPlayer, 1));
 			matchedPlayers = matchedPlayers.concat(scoreBucket.splice(secondPlayer, 1));
+			x-=2;
 		}
 	}
 	
@@ -194,12 +213,8 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 
 function matchRemainingPlayers(scoreBucket) {
 	let matchedPlayers = [];
-	let byePlayer = null;
-	if (scoreBucket.length % 2 === 1) {
-		randomIndex = Math.floor(Math.random() * scoreBucket.length);
-		byePlayer = scoreBucket[randomIndex];
-		scoreBucket.splice(randomIndex, 1);
-	}
+	
+	let byePlayer = removeRandomByePlayer(scoreBucket);
 	
 	let midPoint = Math.floor(scoreBucket.length / 2);
 	for (let x = 0; x < midPoint; x++) {
@@ -215,16 +230,23 @@ function matchRemainingPlayers(scoreBucket) {
 	return matchedPlayers;
 }
 
+function removeRandomByePlayer(scoreBucket) {
+	let byePlayer = null;
+	if (scoreBucket.length % 2 === 1) {
+		randomIndex = Math.floor(Math.random() * scoreBucket.length);
+		byePlayer = scoreBucket[randomIndex];
+		scoreBucket.splice(randomIndex, 1);
+	}
+	return byePlayer;
+}
+
 function updateAllPrevPlayerCount(players) {
 	for (let player of players)
 		player.updatePrevPlayerCount(players);
 }
 
 function findUniqueOpponentIndex(currentPlayerIndex, players) {
-	let midPoint = Math.floor(players.length / 2);
-	let searchDirection = (currentPlayerIndex - midPoint) / Math.abs(currentPlayerIndex - midPoint) * -1;
-	let startIndex = searchDirection === 1 ? 0 : players.length - 1;
-	for (x = startIndex; x < players.length && x >= 0; x += searchDirection) {
+	for (x = 0; x < players.length; x++) {
 		if (x === currentPlayerIndex)
 			continue;
 		else {
@@ -253,6 +275,13 @@ function comparePlayersByScore(a, b) {
 
 function comparePlayersByFirstCount(a, b) {
 	return b.firstCount - a.firstCount;
+}
+
+function comparePlayersByPriorityAndFirstCount(a, b) {
+	let result = a.prevPlayerCount - b.prevPlayerCount;
+	if (result === 0)
+		result = b.firstCount - a.firstCount;
+	return result;
 }
 
 function swapListItems(list, index1, index2) {
