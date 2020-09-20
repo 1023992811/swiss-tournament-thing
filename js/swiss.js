@@ -1,121 +1,7 @@
 let bracketEnded = false;
 let roundCount = 0;
 
-//display section
-function updateDisplay() {
-	let players = playerPool.players;
-	document.getElementById("nextRoundButton").disabled = bracketEnded;
-	document.getElementById("roundDisplay").innerHTML = "Round " + roundCount;
-	if (bracketEnded)
-		displayPlacementList(players);
-	else 
-		displayPairsList(players);
-}
-
-function displayPairsList(players) {
-	let htmlString = pairsListHeader;
-	for (let x = 0; x < players.length; x++) {
-		let tableRow = getPairsListTableRow(x, players);
-		htmlString = htmlString.concat(tableRow);
-	}
-	document.getElementById("playerList").innerHTML = htmlString;
-}
-
-function displayPlacementList(players) {
-	let htmlString = placementListHeader;
-	for (let x = 0; x < players.length; x++) {
-		let tableRow = getPlacementListTableRow(x, players);
-		htmlString = htmlString.concat(tableRow);
-	}
-	document.getElementById("playerList").innerHTML = htmlString;
-}
-
-const pairsListHeader = 
-	"<tr>\n" +
-		"<th>table number</th>" +
-		"<th>player name</th>\n" +
-		"<th>score</th>\n" +
-		"<th>Total scores</th>\n" +
-		"<th>first or second</th>\n" +
-		"<th>first count</th>\n" +
-		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
-		"<th>had bye</th>\n" +
-	"</tr>\n";
-
-function getPairsListTableRow(rowNum, players) {
-	let tableRow =
-		"<tr>\n" +
-		"<td>" +
-		(Math.floor(rowNum / 2) + 1) +
-		"</td>\n" +
-		"<td>" +
-		String(players[rowNum].name) +
-		"</td>\n" +
-		"<td>" +
-		"<input type=number class=scoreInput value=0>" +
-		"</td>\n" +
-		"<td>" +
-		String(players[rowNum].score) +
-		"</td>\n" +
-		"<td>" +
-		(players[rowNum].isFirst()
-			? "first"
-			: players[rowNum].isSecond()
-			? "second"
-			: "bye") +
-		"</td>\n" +
-		"<td>" +
-		String(players[rowNum].firstCount) +
-		"</td>\n" +
-		"<td>" +
-		"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
-		rowNum +
-		")>Remove</button></td>\n" +
-		"<td>" +
-		players[rowNum].hadBye +
-		"</td>\n" +
-		"</tr>\n";
-	return tableRow;
-}
-
-const placementListHeader = 
-	"<tr>\n" +
-		"<th>placement</th>" +
-		"<th>player name</th>\n" +
-		"<th>Total scores</th>\n" +
-		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
-	"</tr>\n";
-
-function getPlacementListTableRow(rowNum, players) {
-	let tableRow = 
-		"<tr>\n" +
-		"<td>" + (rowNum+1) + "</td>" +
-		"<td>" + String(players[rowNum].name) + "</td>\n" +
-		"<td>" + String(players[rowNum].score) + "</td>\n" +
-		"<td><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
-		"</tr>\n";
-	return tableRow;
-}
-
-function removeConfirmation(playerCell) {
-  if (window.confirm("Do you really want to remove this player?")) {
-	playerPool.removePlayer(playerCell);
-	updateDisplay();
-  }
-}
-
-function removeAllPlayersConfirmation() {
-  if (
-	window.confirm(
-	  "You're about to remove all players.  Do you want to proceed?"
-	)
-  ) {
-	playerPool.removeAllPlayers();
-	updateDisplay();
-  }
-}
-
-//backend section
+//button functions
 
 function swissCreatePlayer(name) {
 	playerPool.createPlayer(name);
@@ -154,9 +40,13 @@ function swissNextRound() {
 function swissEndBracket() {
 	bracketEnded = true;
 	let players = playerPool.players;
-	playerPool.players = players.sort(comparePlayersByScore);
+	playerPool.undropAllPlayers();
+	playerPool.updateBucholzScores();
+	playerPool.players = players.sort(comparePlayersByScoreAndBucholz);
 	updateDisplay();
 }
+
+//backend stuff
 
 function matchPlayersByScoreBuckets() {
 	let players = playerPool.players;
@@ -246,66 +136,15 @@ function findUniqueOpponentIndex(currentPlayerIndex, players) {
 }
 
 function findScoreBucketEnd(players, bucketStart) {
-	try {
+	if (players[bucketStart] != undefined) {
 		let currentScoreBucket = players[bucketStart].score;
 		for (let x = bucketStart; x < players.length; x++) {
 			if (currentScoreBucket !== players[x].score) {
 				return x;
 			}
 		}
-	} catch {}
-	return players.length;
-}
-
-function comparePlayersByScore(a, b) {
-	return b.score - a.score;
-}
-
-function comparePlayersByFirstCount(a, b) {
-	return b.firstCount - a.firstCount;
-}
-
-function comparePlayersByPriorityAndFirstCount(a, b) {
-	let result = a.prevPlayerCount - b.prevPlayerCount;
-	if (result === 0)
-		result = b.firstCount - a.firstCount;
-	return result;
-}
-
-function swapListItems(list, index1, index2) {
-	let temp = list[index1];
-	list[index1] = list[index2];
-	list[index2] = temp;
-}
-
-function moveItemToIndex(list, itemIndex, targetIndex) {
-	temp = list[itemIndex];
-	list.splice(itemIndex, 1);
-	list.splice(targetIndex, 0, temp);
-}
-
-function duplicateList(list) {
-	let result = []
-	for (let item of list)
-		result.push(item);
-	return result;
-}
-
-function copyArrayObjects(array) {
-	let result = [];
-	for (let item of array)
-		result.push(item.clone());
-	return result;
-}
-
-function writeToList(items, targetList, startIndex) {
-	for (let index = 0;index < items.length;index++) {
-		if (startIndex + index < targetList.length) {
-			targetList[startIndex+index] = items[index];
-		} else {
-			targetList.push(items[index]);
-		}
 	}
+	return players.length;
 }
 
 /* garbage disposal

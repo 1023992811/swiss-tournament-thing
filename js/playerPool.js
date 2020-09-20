@@ -20,7 +20,7 @@ let playerPool = {
 	},
 	
 	undropAllPlayers: function() {
-		this.players = this.player.concat(this.droppedPlayers);
+		this.players = this.players.concat(this.droppedPlayers);
 		this.droppedPlayers = [];
 	},
 	
@@ -36,6 +36,12 @@ let playerPool = {
 		}
 		for (let player of this.droppedPlayers) {
 			player.bucholzAdjustment++;
+		}
+	},
+	
+	updateBucholzScores: function() {
+		for (let player of this.players) {
+			player.updateBucholzScore();
 		}
 	}
 }
