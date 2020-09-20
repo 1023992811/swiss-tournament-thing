@@ -41,7 +41,7 @@ function swissEndBracket() {
 	bracketEnded = true;
 	let players = playerPool.players;
 	playerPool.undropAllPlayers();
-	playerPool.updateBucholzScores();
+	playerPool.updateBuchholzScores();
 	playerPool.players = players.sort(comparePlayersByScoreAndBucholz);
 	updateDisplay();
 }
@@ -71,9 +71,9 @@ function matchPlayersByScoreBuckets() {
 function matchPlayersInScoreBucket(scoreBucket) {
 	let matchedBucket = [];
 	updateAllPrevPlayerCount(scoreBucket);
-	scoreBucket.sort(comparePlayersByPriorityAndFirstCount);
+	scoreBucket.sort(comparePlayersByPriority);
 	
-	for (let priority = scoreBucket.length - 2; priority >= 0; priority--) {
+	for (let priority = scoreBucket.length - 2; priority > 0; priority--) {
 		matchedBucket = matchedBucket.concat(matchPlayersWithPriority(priority, scoreBucket));
 	}
 	matchedBucket = matchedBucket.concat(matchRemainingPlayers(scoreBucket));
@@ -88,12 +88,21 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 			opponentIndex = findUniqueOpponentIndex(x, scoreBucket);
 			if (opponentIndex === -1)
 				continue;
-			let firstPlayer = opponentIndex > x ? opponentIndex : x;
-			let secondPlayer = opponentIndex < x ? opponentIndex : x;
-			scoreBucket[firstPlayer].newRound(SwissPlayer.roundStatuses.FIRST, scoreBucket[secondPlayer]);
-			scoreBucket[secondPlayer].newRound(SwissPlayer.roundStatuses.SECOND, scoreBucket[firstPlayer]);
-			matchedPlayers = matchedPlayers.concat(scoreBucket.splice(firstPlayer, 1));
-			matchedPlayers = matchedPlayers.concat(scoreBucket.splice(secondPlayer, 1));
+			let higherIndex = opponentIndex > x ? opponentIndex : x;
+			let lowerIndex = opponentIndex < x ? opponentIndex : x;
+			let firstPlayer = scoreBucket[higherIndex];
+			let secondPlayer = scoreBucket[lowerIndex];
+			if (firstPlayer.firstCount > secondPlayer.firstCount) {
+				let temp = firstPlayer;
+				firstPlayer = secondPlayer;
+				secondPlayer = temp;
+			}
+			firstPlayer.newRound(SwissPlayer.roundStatuses.FIRST, scoreBucket[secondPlayer]);
+			secondPlayer.newRound(SwissPlayer.roundStatuses.SECOND, scoreBucket[firstPlayer]);
+			matchedPlayers.push(firstPlayer);
+			matchedPlayers.push(secondPlayer);
+			scoreBucket.splice(higherIndex, 1);
+			scoreBucket.splice(lowerIndex, 1);
 			x-=2;
 		}
 	}
@@ -103,6 +112,7 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 
 function matchRemainingPlayers(scoreBucket) {
 	let matchedPlayers = [];
+	scoreBucket.sort(comparePlayersByFirstCount);
 	
 	let midPoint = Math.floor(scoreBucket.length / 2);
 	for (let x = 0; x < midPoint; x++) {

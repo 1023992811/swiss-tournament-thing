@@ -29,6 +29,12 @@ let playerPool = {
 			player.reset();
 	},
 	
+	populate: function(num) {
+		for(let x = 0;x < num;x++) {
+			this.createPlayer(String(x));
+		}
+	},
+	
 	tallyScores: function() {
 		scoreInputs = document.getElementsByClassName("scoreInput");
 		for (let x = 0; x < scoreInputs.length; x++) {
@@ -39,9 +45,9 @@ let playerPool = {
 		}
 	},
 	
-	updateBucholzScores: function() {
+	updateBuchholzScores: function() {
 		for (let player of this.players) {
-			player.updateBucholzScore();
+			player.updateBuchholzScore();
 		}
 	}
 }
