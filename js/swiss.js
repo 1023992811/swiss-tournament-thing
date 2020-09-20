@@ -168,9 +168,7 @@ function matchPlayersByScoreBuckets() {
 	while ((bucketEnd - bucketStart) > 1 || bucketEnd < players.length) {
 		let bucket = matchedPlayers.slice(bucketStart, bucketEnd);
 		bucket = matchPlayersInScoreBucket(bucket);
-		for (let x = bucketStart; x < bucketEnd; x++) {
-			matchedPlayers[x] = bucket[x-bucketStart];
-		}
+		writeToList(bucket, matchedPlayers, bucketStart);
 		bucketStart += bucket.length - bucket.length % 2;
 		bucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
 		if ((bucketEnd - bucketStart) === 1) {
@@ -185,7 +183,7 @@ function matchPlayersInScoreBucket(scoreBucket) {
 	updateAllPrevPlayerCount(scoreBucket);
 	scoreBucket.sort(comparePlayersByPriorityAndFirstCount);
 	
-	for (let priority = scoreBucket.length - 2; priority > 0; priority--) {
+	for (let priority = scoreBucket.length - 2; priority >= 0; priority--) {
 		matchedBucket = matchedBucket.concat(matchPlayersWithPriority(priority, scoreBucket));
 	}
 	matchedBucket = matchedBucket.concat(matchRemainingPlayers(scoreBucket));
@@ -216,8 +214,6 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 function matchRemainingPlayers(scoreBucket) {
 	let matchedPlayers = [];
 	
-	let byePlayer = removeRandomByePlayer(scoreBucket);
-	
 	let midPoint = Math.floor(scoreBucket.length / 2);
 	for (let x = 0; x < midPoint; x++) {
 		let firstPlayer = scoreBucket[scoreBucket.length - 1 - x];
@@ -227,19 +223,9 @@ function matchRemainingPlayers(scoreBucket) {
 		matchedPlayers.push(firstPlayer);
 		matchedPlayers.push(secondPlayer);
 	}
-	if (byePlayer !== null)
-		matchedPlayers.push(byePlayer);
+	if (scoreBucket.length % 2 === 1)
+		matchedPlayers.push(scoreBucket[midPoint]);
 	return matchedPlayers;
-}
-
-function removeRandomByePlayer(scoreBucket) {
-	let byePlayer = null;
-	if (scoreBucket.length % 2 === 1) {
-		randomIndex = Math.floor(Math.random() * scoreBucket.length);
-		byePlayer = scoreBucket[randomIndex];
-		scoreBucket.splice(randomIndex, 1);
-	}
-	return byePlayer;
 }
 
 function updateAllPrevPlayerCount(players) {
@@ -312,6 +298,16 @@ function copyArrayObjects(array) {
 	return result;
 }
 
+function writeToList(items, targetList, startIndex) {
+	for (let index = 0;index < items.length;index++) {
+		if (startIndex + index < targetList.length) {
+			targetList[startIndex+index] = items[index];
+		} else {
+			targetList.push(items[index]);
+		}
+	}
+}
+
 /* garbage disposal
 function findValidByePlayerIndex(players, startPoint) {
 	let radius = 0;
@@ -371,4 +367,15 @@ function createPriorityBuckets(players) {
 		}
 	}
 	return buckets;
+}*/
+
+/*
+function removeRandomByePlayer(scoreBucket) {
+	let byePlayer = null;
+	if (scoreBucket.length % 2 === 1) {
+		randomIndex = Math.floor(Math.random() * scoreBucket.length);
+		byePlayer = scoreBucket[randomIndex];
+		scoreBucket.splice(randomIndex, 1);
+	}
+	return byePlayer;
 }*/

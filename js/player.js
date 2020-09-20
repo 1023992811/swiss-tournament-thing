@@ -14,7 +14,8 @@ class SwissPlayer {
 		this.firstCount = 0;
 		this.score = 0;
 		this.prevPlayerCount = 0;
-		this.roundStatus = SwissPlayer.roundStatuses.BYE;
+		this.bucholzAdjustment = 0;
+		this.roundStatus = SwissPlayer.roundStatuses.SECOND;
 		this.prevPlayers = [];
 		this.playersLostTo = [];
 		this.hadBye = false;
@@ -49,20 +50,24 @@ class SwissPlayer {
 		opponent: Player, the opponent of this player
 	*/
 	newRound(roundStatus, opponent) {
-		if(this.currentOpponent !== null) {
-			if (this.isUniqueOpponent(this.currentOpponent)) {
-				this.prevPlayers.push(this.currentOpponent);
-			}
-		}
 		this.roundStatus = roundStatus;
 		if (!this.isBye()) {
 			this.firstCount += roundStatus;
 			this.currentOpponent = opponent;
 		} else {
-			this.hadBye = true;
 			this.currentOpponent = null;
 			this.firstCount++;
 		}
+	}
+	
+	tallyScore(score) {
+		this.score += score;
+		if(this.currentOpponent !== null) {
+			if (this.isUniqueOpponent(this.currentOpponent)) {
+				this.prevPlayers.push(this.currentOpponent);
+			}
+		}
+		if (this.isBye()) this.hadBye = true;
 	}
 	
 	updatePrevPlayerCount(players) {

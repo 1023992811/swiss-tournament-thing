@@ -1,5 +1,6 @@
 let playerPool = {
 	players: [],
+	droppedPlayers: [],
 
 	createPlayer: function(name) {
 		this.players.push(new SwissPlayer(name));
@@ -8,9 +9,19 @@ let playerPool = {
 	removePlayer: function(index) {
 		this.players.splice(index, 1);
 	},
+	
+	dropPlayer: function(index) {
+		this.droppedPlayers = this.droppedPlayers.concat(this.players.splice(index, 1));
+	},
 
 	removeAllPlayers: function() {
 		this.players = [];
+		this.droppedPlayers = [];
+	},
+	
+	undropAllPlayers: function() {
+		this.players = this.player.concat(this.droppedPlayers);
+		this.droppedPlayers = [];
 	},
 	
 	resetAllPlayers: function() {
@@ -19,12 +30,12 @@ let playerPool = {
 	},
 	
 	tallyScores: function() {
-		this.lastState = copyArrayObjects(this.players);
-
-		//tally all scores
 		scoreInputs = document.getElementsByClassName("scoreInput");
 		for (let x = 0; x < scoreInputs.length; x++) {
-			this.players[x].score += Number(scoreInputs[x].value);
+			this.players[x].tallyScore(Number(scoreInputs[x].value));
+		}
+		for (let player of this.droppedPlayers) {
+			player.bucholzAdjustment++;
 		}
 	}
 }
