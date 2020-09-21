@@ -14,11 +14,12 @@ class SwissPlayer {
 		this.firstCount = 0;
 		this.score = 0;
 		this.prevPlayerCount = 0;
-		this.bucholzAdjustment = 0;
+		this.buchholzAdjustment = 0;
 		this.roundStatus = SwissPlayer.roundStatuses.SECOND;
 		this.prevPlayers = [];
 		this.playersLostTo = [];
 		this.hadBye = false;
+		this.dropped = false;
 		this.currentOpponent = null;
 	}
 	
@@ -43,6 +44,10 @@ class SwissPlayer {
 		return true;
 	}
 	
+	getScoreString() {
+		return (this.score) + "-" + (this.playersLostTo.length);
+	}
+	
 	/*
 		function to call when this player enters a new round
 		roundStatus: the status of the player this round, reference the
@@ -60,14 +65,15 @@ class SwissPlayer {
 		}
 	}
 	
-	tallyScore(score) {
-		this.score += score;
-		if(this.currentOpponent !== null) {
-			if (this.isUniqueOpponent(this.currentOpponent)) {
-				this.prevPlayers.push(this.currentOpponent);
-			}
+	tallyScore(won) {
+		if(won) {
+			this.score++;
+			if (this.isBye()) this.hadBye = true;
+			else this.prevPlayers.push(this.currentOpponent);
+		} else {
+			this.playersLostTo.push(this.currentOpponent);
+			this.prevPlayers.push(this.currentOpponent);
 		}
-		if (this.isBye()) this.hadBye = true;
 	}
 	
 	updatePrevPlayerCount(players) {
@@ -80,7 +86,11 @@ class SwissPlayer {
 	}
 	
 	updateBuchholzScore() {
-		this.bucholzScore = 0;
+		this.buchholzScore = 0;
+		for (let player of this.playersLostTo) {
+			this.buchholzScore += player.score;
+			this.buchholzScore += player.buchholzAdjustment;
+		}
 	}
 	
 	clone() {

@@ -42,7 +42,7 @@ function swissEndBracket() {
 	let players = playerPool.players;
 	playerPool.undropAllPlayers();
 	playerPool.updateBuchholzScores();
-	playerPool.players = players.sort(comparePlayersByScoreAndBucholz);
+	playerPool.players = players.sort(comparePlayersByScoreAndBuchholz);
 	updateDisplay();
 }
 
@@ -71,7 +71,7 @@ function matchPlayersByScoreBuckets() {
 function matchPlayersInScoreBucket(scoreBucket) {
 	let matchedBucket = [];
 	updateAllPrevPlayerCount(scoreBucket);
-	scoreBucket.sort(comparePlayersByPriority);
+	scoreBucket.sort(comparePlayersByPriorityAndFirstCount);
 	
 	for (let priority = scoreBucket.length - 2; priority > 0; priority--) {
 		matchedBucket = matchedBucket.concat(matchPlayersWithPriority(priority, scoreBucket));
@@ -88,19 +88,21 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 			opponentIndex = findUniqueOpponentIndex(x, scoreBucket);
 			if (opponentIndex === -1)
 				continue;
-			let higherIndex = opponentIndex > x ? opponentIndex : x;
-			let lowerIndex = opponentIndex < x ? opponentIndex : x;
-			let firstPlayer = scoreBucket[higherIndex];
-			let secondPlayer = scoreBucket[lowerIndex];
+			
+			let firstPlayer = scoreBucket[x];
+			let secondPlayer = scoreBucket[opponentIndex];
 			if (firstPlayer.firstCount > secondPlayer.firstCount) {
 				let temp = firstPlayer;
 				firstPlayer = secondPlayer;
 				secondPlayer = temp;
 			}
-			firstPlayer.newRound(SwissPlayer.roundStatuses.FIRST, scoreBucket[secondPlayer]);
-			secondPlayer.newRound(SwissPlayer.roundStatuses.SECOND, scoreBucket[firstPlayer]);
+			firstPlayer.newRound(SwissPlayer.roundStatuses.FIRST, secondPlayer);
+			secondPlayer.newRound(SwissPlayer.roundStatuses.SECOND, firstPlayer);
 			matchedPlayers.push(firstPlayer);
 			matchedPlayers.push(secondPlayer);
+			
+			let higherIndex = opponentIndex > x ? opponentIndex : x;
+			let lowerIndex = opponentIndex < x ? opponentIndex : x;
 			scoreBucket.splice(higherIndex, 1);
 			scoreBucket.splice(lowerIndex, 1);
 			x-=2;

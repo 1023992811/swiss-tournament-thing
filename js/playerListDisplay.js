@@ -30,8 +30,8 @@ const pairsListHeader =
 	"<tr>\n" +
 		"<th>table number</th>" +
 		"<th>player name</th>\n" +
-		"<th>score</th>\n" +
-		"<th>Total scores</th>\n" +
+		"<th>select winners</th>\n" +
+		"<th>scores</th>\n" +
 		"<th>first or second</th>\n" +
 		"<th>first count</th>\n" +
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
@@ -39,36 +39,43 @@ const pairsListHeader =
 	"</tr>\n";
 
 function getPairsListTableRow(rowNum, players) {
+	let tableNum = Math.floor(rowNum / 2) + 1;
 	let tableRow =
 		"<tr>\n" +
-		"<td>" +
-		(Math.floor(rowNum / 2) + 1) +
+		"<td>" + 
+			tableNum +
 		"</td>\n" +
 		"<td>" +
-		String(players[rowNum].name) +
+			String(players[rowNum].name) +
 		"</td>\n" +
 		"<td>" +
-		"<input type=number class=scoreInput value=0>" +
+			"<input type=radio class=scoreInput name=table" + 
+				tableNum + 
+				" id=row" + 
+				rowNum +
+				(rowNum % 2 === 0 ? " checked" : "") +
+				">" +
+			"<label for=row" + rowNum + ">win</lable>" +
 		"</td>\n" +
 		"<td>" +
-		String(players[rowNum].score) +
+			(players[rowNum].getScoreString()) +
 		"</td>\n" +
 		"<td>" +
-		(players[rowNum].isFirst()
-			? "first"
-			: players[rowNum].isSecond()
-			? "second"
-			: "bye") +
+			(players[rowNum].isFirst()
+				? "first"
+				: players[rowNum].isSecond()
+				? "second"
+				: "bye") +
 		"</td>\n" +
 		"<td>" +
-		String(players[rowNum].firstCount) +
+			String(players[rowNum].firstCount) +
 		"</td>\n" +
 		"<td>" +
-		"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
-		rowNum +
-		")>Remove</button></td>\n" +
+			"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
+			rowNum +
+			")>Remove</button></td>\n" +
 		"<td>" +
-		players[rowNum].hadBye +
+			players[rowNum].hadBye +
 		"</td>\n" +
 		"</tr>\n";
 	return tableRow;
@@ -78,7 +85,8 @@ const placementListHeader =
 	"<tr>\n" +
 		"<th>placement</th>" +
 		"<th>player name</th>\n" +
-		"<th>Total scores</th>\n" +
+		"<th>final scores</th>\n" +
+		"<th>buchholz score</th>\n" +
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"</tr>\n";
 
@@ -86,8 +94,9 @@ function getPlacementListTableRow(rowNum, players) {
 	let tableRow = 
 		"<tr>\n" +
 		"<td>" + (rowNum+1) + "</td>" +
-		"<td>" + String(players[rowNum].name) + "</td>\n" +
-		"<td>" + String(players[rowNum].score) + "</td>\n" +
+		"<td>" + (players[rowNum].name) + "</td>\n" +
+		"<td>" + (players[rowNum].getScoreString()) + "</td>\n" +
+		"<td>" + (players[rowNum].buchholzScore) + "</td>\n" +
 		"<td><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
 		"</tr>\n";
 	return tableRow;

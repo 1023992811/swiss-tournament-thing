@@ -6,14 +6,17 @@ function comparePlayersByFirstCount(a, b) {
 	return b.firstCount - a.firstCount;
 }
 
-function comparePlayersByPriority(a, b) {
-	return b.prevPlayerCount - a.prevPlayerCount; 
+function comparePlayersByPriorityAndFirstCount(a, b) {
+	let result = b.prevPlayerCount - a.prevPlayerCount;
+	if (result === 0)
+		result = a.firstCount - b.firstCount;
+	return result;
 }
 
-function comparePlayersByScoreAndBucholz(a, b) {
+function comparePlayersByScoreAndBuchholz(a, b) {
 	let result = b.score - a.score;
 	if (result === 0)
-		result = b.bucholzScore - a.bucholzScore;
+		result = b.buchholzScore - a.buchholzScore;
 	return result;
 }
 

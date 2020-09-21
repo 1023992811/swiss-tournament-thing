@@ -11,6 +11,7 @@ let playerPool = {
 	},
 	
 	dropPlayer: function(index) {
+		this.players[index].dropped = true;
 		this.droppedPlayers = this.droppedPlayers.concat(this.players.splice(index, 1));
 	},
 
@@ -38,10 +39,10 @@ let playerPool = {
 	tallyScores: function() {
 		scoreInputs = document.getElementsByClassName("scoreInput");
 		for (let x = 0; x < scoreInputs.length; x++) {
-			this.players[x].tallyScore(Number(scoreInputs[x].value));
+			this.players[x].tallyScore(scoreInputs[x].checked);
 		}
 		for (let player of this.droppedPlayers) {
-			player.bucholzAdjustment++;
+			player.buchholzAdjustment++;
 		}
 	},
 	
