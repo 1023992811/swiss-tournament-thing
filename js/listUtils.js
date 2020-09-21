@@ -6,17 +6,35 @@ function comparePlayersByFirstCount(a, b) {
 	return b.firstCount - a.firstCount;
 }
 
-function comparePlayersByPriorityAndFirstCount(a, b) {
-	let result = b.prevPlayerCount - a.prevPlayerCount;
-	if (result === 0)
-		result = a.firstCount - b.firstCount;
+function comparePlayersByPrevPlayerCount(a,b) {
+	return b.prevPlayerCount - a.prevPlayerCount;
+}
+
+function comparePlayersByBuchholz(a, b) {
+	return b.buchholzScore - a.buchholzScore;
+}
+
+function comparePlayersByHeadToHead(a, b) {
+	let result = Number(a.isPlayerLostTo(b));
+	result -= Number(b.isPlayerLostTo(a));
 	return result;
 }
 
-function comparePlayersByScoreAndBuchholz(a, b) {
-	let result = b.score - a.score;
+function comparePlayersByPriorityAndFirstCount(a, b) {
+	let result = comparePlayersByPrevPlayerCount(a, b);
 	if (result === 0)
-		result = b.buchholzScore - a.buchholzScore;
+		result = comparePlayersByFirstCount(b, a);
+	return result;
+}
+
+function comparePlayersByTiebreaking(a, b) {
+	let result = comparePlayersByScore(a, b);
+	if (result === 0) {
+		result = comparePlayersByBuchholz(a, b);
+		if (result === 0) {
+			result = comparePlayersByHeadToHead(a, b);
+		}
+	}
 	return result;
 }
 

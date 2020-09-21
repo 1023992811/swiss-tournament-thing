@@ -42,7 +42,7 @@ function swissEndBracket() {
 	let players = playerPool.players;
 	playerPool.undropAllPlayers();
 	playerPool.updateBuchholzScores();
-	playerPool.players = players.sort(comparePlayersByScoreAndBuchholz);
+	playerPool.players = players.sort(comparePlayersByTiebreaking);
 	updateDisplay();
 }
 
@@ -55,7 +55,7 @@ function matchPlayersByScoreBuckets() {
 	matchedPlayers.sort(comparePlayersByScore);
 	let bucketStart = 0;
 	let bucketEnd = findScoreBucketEnd(matchedPlayers, bucketStart);
-	while ((bucketEnd - bucketStart) > 1 || bucketEnd < players.length) {
+	while ((bucketEnd - bucketStart) > 0 || bucketEnd < players.length) {
 		let bucket = matchedPlayers.slice(bucketStart, bucketEnd);
 		bucket = matchPlayersInScoreBucket(bucket);
 		writeToList(bucket, matchedPlayers, bucketStart);
@@ -63,6 +63,7 @@ function matchPlayersByScoreBuckets() {
 		bucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
 		if ((bucketEnd - bucketStart) === 1) {
 			matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.roundStatuses.BYE);
+			bucketStart++;
 		}
 	}
 	return matchedPlayers;

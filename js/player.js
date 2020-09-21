@@ -44,6 +44,15 @@ class SwissPlayer {
 		return true;
 	}
 	
+	isPlayerLostTo(opponent) {
+		for (let player of this.playersLostTo) {
+			if (player === opponent) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	getScoreString() {
 		return (this.score) + "-" + (this.playersLostTo.length);
 	}
