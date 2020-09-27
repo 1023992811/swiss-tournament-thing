@@ -42,13 +42,13 @@ let playerPool = {
 			this.players[x].tallyScore(scoreInputs[x].checked);
 		}
 		for (let player of this.droppedPlayers) {
-			player.buchholzAdjustment++;
+			player.loserScoreAdjustment++;
 		}
 	},
 	
-	updateBuchholzScores: function() {
+	updateTiebreakerScores: function() {
 		for (let player of this.players) {
-			player.updateBuchholzScore();
+			player.updateLoserScore();
 		}
 	}
 }

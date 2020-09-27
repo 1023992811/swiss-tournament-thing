@@ -86,7 +86,7 @@ const placementListHeader =
 		"<th>placement</th>" +
 		"<th>player name</th>\n" +
 		"<th>final scores</th>\n" +
-		"<th>buchholz score</th>\n" +
+		"<th>loser scores</th>\n" +
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"</tr>\n";
 
@@ -96,7 +96,7 @@ function getPlacementListTableRow(rowNum, players) {
 		"<td>" + (rowNum+1) + "</td>" +
 		"<td>" + (players[rowNum].name) + "</td>\n" +
 		"<td>" + (players[rowNum].getScoreString()) + "</td>\n" +
-		"<td>" + (players[rowNum].buchholzScore) + "</td>\n" +
+		"<td>" + (players[rowNum].loserScore) + "</td>\n" +
 		"<td><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
 		"</tr>\n";
 	return tableRow;

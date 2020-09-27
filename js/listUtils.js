@@ -10,8 +10,8 @@ function comparePlayersByPrevPlayerCount(a,b) {
 	return b.prevPlayerCount - a.prevPlayerCount;
 }
 
-function comparePlayersByBuchholz(a, b) {
-	return b.buchholzScore - a.buchholzScore;
+function comparePlayersByLoserScores(a, b) {
+	return b.loserScore - a.loserScore;
 }
 
 function comparePlayersByHeadToHead(a, b) {
@@ -29,12 +29,8 @@ function comparePlayersByPriorityAndFirstCount(a, b) {
 
 function comparePlayersByTiebreaking(a, b) {
 	let result = comparePlayersByScore(a, b);
-	if (result === 0) {
-		result = comparePlayersByBuchholz(a, b);
-		if (result === 0) {
-			result = comparePlayersByHeadToHead(a, b);
-		}
-	}
+	if (result === 0) result = comparePlayersByLoserScores(a, b);
+	if (result === 0) result = comparePlayersByHeadToHead(a, b);
 	return result;
 }
 

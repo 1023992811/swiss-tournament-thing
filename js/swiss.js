@@ -14,15 +14,16 @@ function swissInitBracket() {
 	
 	bracketEnded = false;
 	roundCount = 1;
+	playerPool.undropAllPlayers();
 	playerPool.resetAllPlayers();
 	
 	for (let x = 0; x < players.length - 1; x += 2) {
-		players[x].newRound(SwissPlayer.roundStatuses.FIRST, players[x+1]);
-		players[x+1].newRound(SwissPlayer.roundStatuses.SECOND, players[x]);
+		players[x].newRound(SwissPlayer.prototype.roundStatuses.FIRST, players[x+1]);
+		players[x+1].newRound(SwissPlayer.prototype.roundStatuses.SECOND, players[x]);
 	}
 	
 	if (players.length % 2 === 1)
-		players[players.length-1].newRound(SwissPlayer.roundStatuses.BYE);
+		players[players.length-1].newRound(SwissPlayer.prototype.roundStatuses.BYE);
 	
 	debugHelper.logUniquePairsCount(players);
 	updateDisplay();
@@ -40,8 +41,7 @@ function swissNextRound() {
 function swissEndBracket() {
 	bracketEnded = true;
 	let players = playerPool.players;
-	playerPool.undropAllPlayers();
-	playerPool.updateBuchholzScores();
+	playerPool.updateTiebreakerScores();
 	playerPool.players = players.sort(comparePlayersByTiebreaking);
 	updateDisplay();
 }
@@ -62,7 +62,7 @@ function matchPlayersByScoreBuckets() {
 		bucketStart += bucket.length - bucket.length % 2;
 		bucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
 		if ((bucketEnd - bucketStart) === 1) {
-			matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.roundStatuses.BYE);
+			matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.prototype.roundStatuses.BYE);
 			bucketStart++;
 		}
 	}
@@ -97,8 +97,8 @@ function matchPlayersWithPriority(priority, scoreBucket) {
 				firstPlayer = secondPlayer;
 				secondPlayer = temp;
 			}
-			firstPlayer.newRound(SwissPlayer.roundStatuses.FIRST, secondPlayer);
-			secondPlayer.newRound(SwissPlayer.roundStatuses.SECOND, firstPlayer);
+			firstPlayer.newRound(SwissPlayer.prototype.roundStatuses.FIRST, secondPlayer);
+			secondPlayer.newRound(SwissPlayer.prototype.roundStatuses.SECOND, firstPlayer);
 			matchedPlayers.push(firstPlayer);
 			matchedPlayers.push(secondPlayer);
 			
@@ -121,8 +121,8 @@ function matchRemainingPlayers(scoreBucket) {
 	for (let x = 0; x < midPoint; x++) {
 		let firstPlayer = scoreBucket[scoreBucket.length - 1 - x];
 		let secondPlayer = scoreBucket[x];
-		firstPlayer.newRound(SwissPlayer.roundStatuses.FIRST, secondPlayer);
-		secondPlayer.newRound(SwissPlayer.roundStatuses.SECOND, firstPlayer);
+		firstPlayer.newRound(SwissPlayer.prototype.roundStatuses.FIRST, secondPlayer);
+		secondPlayer.newRound(SwissPlayer.prototype.roundStatuses.SECOND, firstPlayer);
 		matchedPlayers.push(firstPlayer);
 		matchedPlayers.push(secondPlayer);
 	}
@@ -159,75 +159,3 @@ function findScoreBucketEnd(players, bucketStart) {
 	}
 	return players.length;
 }
-
-/* garbage disposal
-function findValidByePlayerIndex(players, startPoint) {
-	let radius = 0;
-	let rightFlag = false;
-	let leftFlag = false;
-	for (;!rightFlag || !leftFlag;radius++) {
-		if (!rightFlag) {
-			rightIndex = startPoint + radius;
-			if (rightIndex >= players.length)
-				rightFlag = true;
-			else if (!players[rightIndex].hadBye)
-				return rightIndex;
-		}
-		if (!leftFlag) {
-			leftIndex = startPoint - radius;
-			if (leftIndex < 0)
-				leftFlag = true;
-			else if (!players[startPoint-radius].hadBye)
-				return startPoint - radius;
-		}
-	}
-	throw "no valid bye player"
-}*/
-
-/*
-function matchPlayersInScoreBucket(scoreBucket) {
-	let matchedBucket = []
-	
-	scoreBucket.sort(comparePlayersByFirstCount);
-	let midPoint = Math.floor((scoreBucket.length) / 2)
-	for (let x = 0; x < midPoint; x ++) {
-		let player1 = scoreBucket[x];
-		let player2Index = findValidOpponentIndex(x, scoreBucket;
-		let player2 = scoreBucket[player2Index];
-		scoreBucket.splice(player2Index, 1);
-		scoreBucket.splice(scoreBucket.length - x, 0, player2);
-		matchedBucket.push(player2);
-		matchedBucket.push(player1);
-		player2.newRound(SwissPlayer.roundStatuses.FIRST, player1);
-		player1.newRound(SwissPlayer.roundStatuses.SECOND, player2);
-	}
-	if (scoreBucket.length % 2 === 1)
-		matchedBucket.push(scoreBucket[midPoint]);
-	return matchedBucket;
-}*/
-
-/*
-function createPriorityBuckets(players) {
-	let buckets = [duplicateList(players),[]];
-	
-	for (let x = 0; x<buckets[0].length;x++) {
-		prevOpponentIndex = findPrevOpponentIndex(buckets[0][x], buckets[0]);
-		if (prevOpponentIndex !== -1) {
-			buckets[1].concat(buckets[0].splice(prevOpponentIndex,1));
-			buckets[1].concat(buckets[0].splice(x,1));
-			x--;
-		}
-	}
-	return buckets;
-}*/
-
-/*
-function removeRandomByePlayer(scoreBucket) {
-	let byePlayer = null;
-	if (scoreBucket.length % 2 === 1) {
-		randomIndex = Math.floor(Math.random() * scoreBucket.length);
-		byePlayer = scoreBucket[randomIndex];
-		scoreBucket.splice(randomIndex, 1);
-	}
-	return byePlayer;
-}*/
