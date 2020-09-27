@@ -46,9 +46,9 @@ let playerPool = {
 		}
 	},
 	
-	updateTiebreakerScores: function() {
+	updateTieBreakerScores: function() {
 		for (let player of this.players) {
-			player.updateLoserScore();
+			player.updateTieBreakerScores();
 		}
 	}
 }
