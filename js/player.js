@@ -16,7 +16,7 @@ class SwissPlayer {
 		this.prevPlayerCount = 0;
 		this.loserScoreAdjustment = 0;
 		this.roundStatus = SwissPlayer.roundStatuses.SECOND;
-		this.prevPlayers = [];
+		this.playersWonTo = [];
 		this.playersLostTo = [];
 		this.hadBye = false;
 		this.dropped = false;
@@ -36,16 +36,20 @@ class SwissPlayer {
 	}
 	
 	isUniqueOpponent(opponent) {
-		for (let player of this.prevPlayers) {
-			if (player === opponent) {
-				return false;
-			}
-		}
-		return true;
+		return !(this.isPlayerLostTo(opponent) || this.isPlayerWonTo(opponent))
 	}
 	
 	isPlayerLostTo(opponent) {
 		for (let player of this.playersLostTo) {
+			if (player === opponent) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	isPlayerWonTo(opponent) {
+		for (let player of this.playersWonTo) {
 			if (player === opponent) {
 				return true;
 			}
@@ -78,10 +82,9 @@ class SwissPlayer {
 		if(won) {
 			this.score++;
 			if (this.isBye()) this.hadBye = true;
-			else this.prevPlayers.push(this.currentOpponent);
+			else if (this.isUniqueOpponent(this.currentOpponent)) this.playersWonTo.push(this.currentOpponent);
 		} else {
-			this.playersLostTo.push(this.currentOpponent);
-			this.prevPlayers.push(this.currentOpponent);
+			if (this.isUniqueOpponent(this.currentOpponent)) this.playersLostTo.push(this.currentOpponent);
 		}
 	}
 	
@@ -99,6 +102,12 @@ class SwissPlayer {
 		for (let player of this.playersLostTo) {
 			this.loserScore += player.score;
 			this.loserScore += player.loserScoreAdjustment;
+		}
+		this.winnerScore = 0;
+		for (let player of this.playersWonTo) {
+			if (player.score > this.score) {
+				this.winnerScore += player.score;
+			}
 		}
 	}
 	
