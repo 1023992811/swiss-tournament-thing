@@ -6,6 +6,7 @@ function updateDisplay() {
 		displayPlacementList(players);
 	else
 		displayPairsList(players);
+	enableDropButton();
 }
 
 function displayPairsList(players) {
@@ -35,6 +36,7 @@ const pairsListHeader =
 		"<th>first or second</th>\n" +
 		"<th>first count</th>\n" +
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
+		"<th>players to drop</th>\n" +
 		"<th>had bye</th>\n" +
 	"</tr>\n";
 
@@ -74,6 +76,7 @@ function getPairsListTableRow(rowNum, players) {
 			"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
 			rowNum +
 			")>Remove</button></td>\n" +
+		"<td><input type='checkbox' class='dropInput' onclick='enableDropButton()'></td>\n" +
 		"<td>" +
 			players[rowNum].hadBye +
 		"</td>\n" +
@@ -88,6 +91,7 @@ const placementListHeader =
 		"<th>final scores</th>\n" +
 		"<th>loser scores</th>\n" +
 		"<th>winner scores</th>\n" +
+		"<th>dropped</th>\n" +
 		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"</tr>\n";
 
@@ -99,6 +103,7 @@ function getPlacementListTableRow(rowNum, players) {
 		"<td>" + (players[rowNum].getScoreString()) + "</td>\n" +
 		"<td>" + (players[rowNum].loserScore) + "</td>\n" +
 		"<td>" + (players[rowNum].winnerScore) + "</td>\n" +
+		"<td>" + (players[rowNum].dropped) + "</td>\n" +
 		"<td><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
 		"</tr>\n";
 	return tableRow;
@@ -120,4 +125,16 @@ function removeAllPlayersConfirmation() {
 	playerPool.removeAllPlayers();
 	updateDisplay();
   }
+}
+
+function enableDropButton() {
+	dropInputs = document.getElementsByClassName("dropInput");
+	let disabled = true;
+	for (let input of dropInputs) {
+		if (input.checked) {
+			disabled = false;
+			break;
+		}
+	}
+	document.getElementById("dropButton").disabled = disabled;
 }

@@ -70,11 +70,9 @@ class SwissPlayer {
 	newRound(roundStatus, opponent) {
 		this.roundStatus = roundStatus;
 		if (!this.isBye()) {
-			this.firstCount += roundStatus;
 			this.currentOpponent = opponent;
 		} else {
 			this.currentOpponent = null;
-			this.firstCount++;
 		}
 	}
 	
@@ -86,6 +84,7 @@ class SwissPlayer {
 		} else {
 			if (this.isUniqueOpponent(this.currentOpponent)) this.playersLostTo.push(this.currentOpponent);
 		}
+		if (this.isFirst()) this.firstCount++;
 	}
 	
 	updatePrevPlayerCount(players) {

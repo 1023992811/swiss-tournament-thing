@@ -50,5 +50,8 @@ let playerPool = {
 		for (let player of this.players) {
 			player.updateTieBreakerScores();
 		}
+		for (let player of this.droppedPlayers) {
+			player.updateTieBreakerScores();
+		}
 	}
 }

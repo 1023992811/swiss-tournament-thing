@@ -56,6 +56,7 @@
                 Remove All Players
               </button>
             </th>
+			<th>players to drop</th>
             <th>had bye</th>
           </tr>
         </table>
@@ -67,13 +68,22 @@
           >
             Start Bracket/Reset to Round 1
           </button>
+		  <button 
+			onclick="dropAndPair()"
+			id="dropButton"
+			type="button"
+			class="btn btn-secondary"
+			disabled=true;
+		  >
+			Drop Marked Players
+		  </button>
           <button
             onclick="swissNextRound()"
             id="nextRoundButton"
             type="button"
             class="btn btn-secondary"
           >
-            Next Round
+            Drop Players And Next Round
           </button>
           <button
             onclick="swissEndBracket()"
