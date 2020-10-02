@@ -36,9 +36,9 @@ function comparePlayersByTiebreaking(a, b) {
 	if (result === 0) {
 		result = comparePlayersByLoserScore(a, b);
 		if (result === 0 ) {
-			result = comparePlayersByWinnerScore(a, b);
+			result = comparePlayersByHeadToHead(a, b);
 			if (result === 0) {
-				result = comparePlayersByHeadToHead(a, b);
+				result = comparePlayersByWinnerScore(a, b);
 			}
 		}
 	}

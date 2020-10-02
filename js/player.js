@@ -100,11 +100,11 @@ class SwissPlayer {
 		this.loserScore = 0;
 		for (let player of this.playersLostTo) {
 			this.loserScore += player.score;
-			this.loserScore += player.loserScoreAdjustment;
+			this.loserScore += player.loserScoreAdjustment / 2;
 		}
 		this.winnerScore = 0;
 		for (let player of this.playersWonTo) {
-			if (player.score > this.score) {
+			if (player.score >= this.score) {
 				this.winnerScore += player.score;
 			}
 		}
