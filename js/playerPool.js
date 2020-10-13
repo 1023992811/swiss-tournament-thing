@@ -39,7 +39,7 @@ let playerPool = {
 	tallyScores: function() {
 		scoreInputs = document.getElementsByClassName("scoreInput");
 		for (let x = 0; x < scoreInputs.length; x++) {
-			this.players[x].tallyScore(scoreInputs[x].checked);
+			this.players[x].tallyScore(scoreInputs[x].classList.contains("btn-success"));
 		}
 		for (let player of this.droppedPlayers) {
 			player.loserScoreAdjustment++;

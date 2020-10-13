@@ -10,12 +10,13 @@ function updateDisplay() {
 }
 
 function displayPairsList(players) {
-	let htmlString = pairsListHeader;
+	let table = document.getElementById("playerList");
+	table.innerHTML = pairsListHeader;
 	for (let x = 0; x < players.length; x++) {
 		let tableRow = getPairsListTableRow(x, players);
-		htmlString = htmlString.concat(tableRow);
+		table.appendChild(tableRow);
 	}
-	document.getElementById("playerList").innerHTML = htmlString;
+	
 }
 
 function displayPlacementList(players) {
@@ -42,45 +43,64 @@ const pairsListHeader =
 
 function getPairsListTableRow(rowNum, players) {
 	let tableNum = Math.floor(rowNum / 2) + 1;
-	let tableRow =
-		"<tr>\n" +
-		"<td>" + 
-			tableNum +
-		"</td>\n" +
-		"<td>" +
-			String(players[rowNum].name) +
-		"</td>\n" +
-		"<td>" +
-			"<input type=radio class=scoreInput name=table" + 
-				tableNum + 
-				" id=row" + 
-				rowNum +
-				(rowNum % 2 === 0 ? " checked" : "") +
-				">" +
-			"<label for=row" + rowNum + ">win</lable>" +
-		"</td>\n" +
-		"<td>" +
-			(players[rowNum].getScoreString()) +
-		"</td>\n" +
-		"<td>" +
-			(players[rowNum].isFirst()
-				? "first"
-				: players[rowNum].isSecond()
-				? "second"
-				: "bye") +
-		"</td>\n" +
-		"<td>" +
-			String(players[rowNum].firstCount) +
-		"</td>\n" +
-		"<td>" +
-			"<button type='button' class='btn btn-danger' onclick=removeConfirmation(" +
-			rowNum +
-			")>Remove</button></td>\n" +
-		"<td><input type='checkbox' class='dropInput' onclick='enableDropButton()'></td>\n" +
-		"<td>" +
-			players[rowNum].hadBye +
-		"</td>\n" +
-		"</tr>\n";
+	
+	let tableRow = document.createElement("tr");
+	
+	let tableNumDisplay = document.createElement("td");
+	tableNumDisplay.textContent = tableNum;
+	tableRow.appendChild(tableNumDisplay);
+	
+	let playerNameDisplay = document.createElement("td");
+	playerNameDisplay.textContent = String(players[rowNum].name);
+	tableRow.appendChild(playerNameDisplay);
+
+	let scoreInputDisplay = document.createElement("td");
+	let scoreInput = document.createElement("button");
+	scoreInput.className = "scoreInput btn";
+	scoreInput.name = "table" + tableNum;
+	rowNum % 2 === 0
+		? switchButtonToWinner(scoreInput)
+		: switchButtonToLoser(scoreInput);
+	scoreInput.addEventListener("click", (event) => {scoreInputHandler(event, scoreInput)})
+	scoreInputDisplay.appendChild(scoreInput);
+	tableRow.appendChild(scoreInputDisplay);
+		
+	let playerScore = document.createElement("td");
+	playerScore.textContent = (players[rowNum].getScoreString());
+	tableRow.appendChild(playerScore);
+
+	let playerStatus = document.createElement("td");
+	playerStatus.textContent = (players[rowNum].isFirst()
+		? "first"
+		: players[rowNum].isSecond()
+		? "second"
+		: "bye")
+	tableRow.appendChild(playerStatus);
+
+	let firstCount = document.createElement("td");
+	firstCount.textContent = String(players[rowNum].firstCount);
+	tableRow.appendChild(firstCount);
+
+	let removeButtonDisplay = document.createElement("td");
+	let removeButton = document.createElement("button");
+	removeButton.textContent = "remove";
+	removeButton.className = "btn btn-danger";
+	removeButton.onclick = "removeConfirmation(" + rowNum + ")";
+	removeButtonDisplay.appendChild(removeButton);
+	tableRow.appendChild(removeButtonDisplay);
+	
+	let dropPlayerDisplay = document.createElement("td");
+	let dropPlayerMark = document.createElement("input");
+	dropPlayerMark.type = "checkbox";
+	dropPlayerMark.className = "dropInput";
+	dropPlayerMark.onclick = "enableDropButton()";
+	dropPlayerDisplay.appendChild(dropPlayerMark);
+	tableRow.appendChild(dropPlayerDisplay);
+		
+	let hadBye = document.createElement("td");
+	hadBye.textContent = players[rowNum].hadBye;
+	tableRow.appendChild(hadBye);
+
 	return tableRow;
 }
 
@@ -137,4 +157,28 @@ function enableDropButton() {
 		}
 	}
 	document.getElementById("dropButton").disabled = disabled;
+}
+
+function scoreInputHandler(event, scoreInput) {
+	let thisTable = document.getElementsByName(scoreInput.name);
+	if (scoreInput.classList.contains("btn-success")) {
+		switchButtonToLoser(scoreInput);
+	} else {
+		for (let input of thisTable) {
+			switchButtonToLoser(input);
+		}
+		switchButtonToWinner(scoreInput);
+	}
+}
+
+function switchButtonToWinner(button) {
+	button.classList.remove("btn-danger");
+	button.classList.add("btn-success");
+	button.textContent = "winner";
+}
+
+function switchButtonToLoser(button) {
+	button.classList.remove("btn-success");
+	button.classList.add("btn-danger");
+	button.textContent = "loser";
 }
