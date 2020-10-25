@@ -104,9 +104,7 @@ class SwissPlayer {
 		}
 		this.winnerScore = 0;
 		for (let player of this.playersWonTo) {
-			if (player.score >= this.score) {
-				this.winnerScore += player.score;
-			}
+			this.winnerScore += player.score;
 		}
 	}
 	

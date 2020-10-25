@@ -35,10 +35,10 @@ function comparePlayersByTiebreaking(a, b) {
 	let result = comparePlayersByScore(a, b);
 	if (result === 0) {
 		result = comparePlayersByLoserScore(a, b);
-		if (result === 0 ) {
-			result = comparePlayersByHeadToHead(a, b);
-			if (result === 0) {
-				result = comparePlayersByWinnerScore(a, b);
+		if (result === 0) {
+			result = comparePlayersByWinnerScore(a, b);
+			if (result === 0 ) {
+				result = comparePlayersByHeadToHead(a, b);
 			}
 		}
 	}
@@ -49,6 +49,14 @@ function swapListItems(list, index1, index2) {
 	let temp = list[index1];
 	list[index1] = list[index2];
 	list[index2] = temp;
+}
+
+function shuffle(a) {
+    for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
 }
 
 function moveItemToIndex(list, itemIndex, targetIndex) {
