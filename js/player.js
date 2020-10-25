@@ -15,6 +15,7 @@ class SwissPlayer {
 		this.score = 0;
 		this.prevPlayerCount = 0;
 		this.loserScoreAdjustment = 0;
+		this.winnerScoreAdjustment = 0;
 		this.roundStatus = SwissPlayer.roundStatuses.SECOND;
 		this.playersWonTo = [];
 		this.playersLostTo = [];
@@ -100,11 +101,12 @@ class SwissPlayer {
 		this.loserScore = 0;
 		for (let player of this.playersLostTo) {
 			this.loserScore += player.score;
-			this.loserScore += player.loserScoreAdjustment / 2;
+			this.loserScore += player.loserScoreAdjustment;
 		}
 		this.winnerScore = 0;
 		for (let player of this.playersWonTo) {
 			this.winnerScore += player.score;
+			this.winnerScore += player.winnerScoreAdjustment;
 		}
 	}
 	

@@ -41,16 +41,22 @@ let playerPool = {
 		for (let x = 0; x < scoreInputs.length; x++) {
 			this.players[x].tallyScore(scoreInputs[x].classList.contains("btn-success"));
 		}
-		for (let player of this.droppedPlayers) {
-			player.loserScoreAdjustment++;
+		this.updateTieBreakerScoresAdjustment();
+	},
+	
+	updateTieBreakerScoresAdjustment: function() {
+		let winsToGive = Math.floor(this.droppedPlayers.length / 2);
+		for (let winsGiven = 0; winsGiven < winsToGive; winsGiven++) {
+			shuffle(droppedPlayers);
+			this.droppedPlayers[winsGiven].winnerScoreAdjustment++;
+		}
+		for (let x = winsToGive; x < this.droppedPlayers.length;x++) {
+			this.droppedPlayers[x].loserScoreAdjustment++;
 		}
 	},
 	
 	updateTieBreakerScores: function() {
 		for (let player of this.players) {
-			player.updateTieBreakerScores();
-		}
-		for (let player of this.droppedPlayers) {
 			player.updateTieBreakerScores();
 		}
 	}
