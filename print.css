@@ -1,0 +1,18 @@
+#vanguardHead, h1, #tournamentButtons, .printHidden{
+	display: none;
+}
+
+#playerList {
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+table, tr, td, th {
+	border: 2px black solid;
+	border-collapse: collapse;
+}
+
+.oddTable {
+	border-width: 5px;
+}

@@ -11,6 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" media="print" href="print.css" />
   </head>
   <body>
     <div id="vanguardApp">
@@ -40,25 +41,28 @@
       <div id="tournamentInfo">
         <h1 id="roundDisplay">Round 0</h1>
         <table id="playerList">
-          <tr id="vangSwissRow">
-            <th>table number</th>
-            <th>player name</th>
-            <th>select winners</th>
-            <th>scores</th>
-            <th>first or second</th>
-            <th>first count</th>
-            <th>
-              <button
-                onclick="removeAllPlayersConfirmation()"
-                type="button"
-                class="btn btn-danger"
-              >
-                Remove All Players
-              </button>
-            </th>
-			<th>players to drop</th>
-            <th>had bye</th>
-          </tr>
+		  <tbody id="vangSwissRow">
+            <tr>
+              <th>table number</th>
+              <th>player name</th>
+              <th class="print-hidden">select winners</th>
+              <th>scores</th>
+              <th>first or second</th>
+              <th class="print-hidden">first count</th>
+              <th class="print-hidden">
+                <button
+                  onclick="removeAllPlayersConfirmation()"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  Remove All Players
+                </button>
+              </th>
+			  <th class="print-hidden">players to drop</th>
+              <th class="print-hidden">had bye</th>
+            </tr>
+		  </tbody>
+		  <tbody id=players></tbody>
         </table>
         <div id="tournamentButtons">
           <button

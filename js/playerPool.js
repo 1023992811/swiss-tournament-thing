@@ -47,17 +47,17 @@ let playerPool = {
 	
 	updateTieBreakerScoresAdjustment: function() {
 		let winsToGive = Math.floor(this.droppedPlayers.length / 2);
-		for (let winsGiven = 0; winsGiven < winsToGive; winsGiven++) {
+		for (let x = 0; x < winsToGive; x++) {
 			shuffle(this.droppedPlayers);
-			this.droppedPlayers[winsGiven].winnerScoreAdjustment++;
-		}
-		for (let x = winsToGive; x < this.droppedPlayers.length;x++) {
-			this.droppedPlayers[x].loserScoreAdjustment++;
+			this.droppedPlayers[x].TieBreakerScoreAdjustment++;
 		}
 	},
 	
 	updateTieBreakerScores: function() {
 		for (let player of this.players) {
+			player.updateTieBreakerScores();
+		}
+		for (let player of this.droppedPlayers) {
 			player.updateTieBreakerScores();
 		}
 	}

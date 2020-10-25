@@ -41,6 +41,10 @@ body {
   margin-top: 5%;
 }
 
+.oddTable {
+	background-color: #bbbbbb;
+}
+
 #tournamentButtons {
   margin: 0 auto;
   margin-top: 2%;

@@ -10,41 +10,48 @@ function updateDisplay() {
 }
 
 function displayPairsList(players) {
-	let table = document.getElementById("playerList");
-	table.innerHTML = pairsListHeader;
+	let tableHeader = document.getElementById("vangSwissRow");
+	tableHeader.innerHTML = pairsListHeader;
+	
+	let playersList = document.getElementById("players");
+	removeAllChildNode(playersList);
 	for (let x = 0; x < players.length; x++) {
 		let tableRow = getPairsListTableRow(x, players);
-		table.appendChild(tableRow);
+		playersList.appendChild(tableRow);
 	}
 	
 }
 
 function displayPlacementList(players) {
-	let htmlString = placementListHeader;
+	let tableHeader = document.getElementById("vangSwissRow");
+	tableHeader.innerHTML = placementListHeader;
+	let playersList = document.getElementById("players");
+	let htmlString = "";
 	for (let x = 0; x < players.length; x++) {
 		let tableRow = getPlacementListTableRow(x, players);
 		htmlString = htmlString.concat(tableRow);
 	}
-	document.getElementById("playerList").innerHTML = htmlString;
+	playersList.innerHTML = htmlString;
 }
 
-const pairsListHeader = 
+const pairsListHeader =
 	"<tr>\n" +
 		"<th>table number</th>" +
 		"<th>player name</th>\n" +
-		"<th>select winners</th>\n" +
+		"<th class='printHidden'>select winners</th>\n" +
 		"<th>scores</th>\n" +
 		"<th>first or second</th>\n" +
-		"<th>first count</th>\n" +
-		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
-		"<th>players to drop</th>\n" +
-		"<th>had bye</th>\n" +
+		"<th class='printHidden'>first count</th>\n" +
+		"<th class='printHidden'><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
+		"<th class='printHidden'>players to drop</th>\n" +
+		"<th class='printHidden'>had bye</th>\n" +
 	"</tr>\n";
 
 function getPairsListTableRow(rowNum, players) {
 	let tableNum = Math.floor(rowNum / 2) + 1;
 	
 	let tableRow = document.createElement("tr");
+	tableRow.className = (tableNum % 2 ? "oddTable" : "");
 	
 	let tableNumDisplay = document.createElement("td");
 	tableNumDisplay.textContent = tableNum;
@@ -63,6 +70,7 @@ function getPairsListTableRow(rowNum, players) {
 		: switchButtonToLoser(scoreInput);
 	scoreInput.addEventListener("click", (event) => {scoreInputHandler(event, scoreInput)})
 	scoreInputDisplay.appendChild(scoreInput);
+	scoreInputDisplay.className = "printHidden";
 	tableRow.appendChild(scoreInputDisplay);
 		
 	let playerScore = document.createElement("td");
@@ -78,6 +86,7 @@ function getPairsListTableRow(rowNum, players) {
 	tableRow.appendChild(playerStatus);
 
 	let firstCount = document.createElement("td");
+	firstCount.className ="printHidden";
 	firstCount.textContent = String(players[rowNum].firstCount);
 	tableRow.appendChild(firstCount);
 
@@ -87,6 +96,7 @@ function getPairsListTableRow(rowNum, players) {
 	removeButton.className = "btn btn-danger";
 	removeButton.onclick = "removeConfirmation(" + rowNum + ")";
 	removeButtonDisplay.appendChild(removeButton);
+	removeButtonDisplay.className = "printHidden";
 	tableRow.appendChild(removeButtonDisplay);
 	
 	let dropPlayerDisplay = document.createElement("td");
@@ -95,9 +105,11 @@ function getPairsListTableRow(rowNum, players) {
 	dropPlayerMark.className = "dropInput";
 	dropPlayerMark.onclick = "enableDropButton()";
 	dropPlayerDisplay.appendChild(dropPlayerMark);
+	dropPlayerDisplay.className = "printHidden";
 	tableRow.appendChild(dropPlayerDisplay);
 		
 	let hadBye = document.createElement("td");
+	hadBye.className ="printHidden";
 	hadBye.textContent = players[rowNum].hadBye;
 	tableRow.appendChild(hadBye);
 
@@ -109,10 +121,10 @@ const placementListHeader =
 		"<th>placement</th>" +
 		"<th>player name</th>\n" +
 		"<th>final scores</th>\n" +
-		"<th>loser scores</th>\n" +
-		"<th>winner scores</th>\n" +
+		"<th class='printHidden'>loser scores</th>\n" +
+		"<th class='printHidden'>winner scores</th>\n" +
 		"<th>dropped</th>\n" +
-		"<th><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
+		"<th class='printHidden'><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"</tr>\n";
 
 function getPlacementListTableRow(rowNum, players) {
@@ -121,10 +133,10 @@ function getPlacementListTableRow(rowNum, players) {
 		"<td>" + (rowNum+1) + "</td>" +
 		"<td>" + (players[rowNum].name) + "</td>\n" +
 		"<td>" + (players[rowNum].getScoreString()) + "</td>\n" +
-		"<td>" + (players[rowNum].loserScore) + "</td>\n" +
-		"<td>" + (players[rowNum].winnerScore) + "</td>\n" +
+		"<td class='printHidden'>" + (players[rowNum].loserScore) + "</td>\n" +
+		"<td class='printHidden'>" + (players[rowNum].winnerScore) + "</td>\n" +
 		"<td>" + (players[rowNum].dropped) + "</td>\n" +
-		"<td><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
+		"<td class='printHidden'><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
 		"</tr>\n";
 	return tableRow;
 }
@@ -181,4 +193,10 @@ function switchButtonToLoser(button) {
 	button.classList.remove("btn-success");
 	button.classList.add("btn-danger");
 	button.textContent = "loser";
+}
+
+function removeAllChildNode(parent) {
+	while (parent.firstChild !== null) {
+		parent.removeChild(parent.firstChild);
+	}
 }
