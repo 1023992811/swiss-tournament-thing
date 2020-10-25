@@ -11,8 +11,9 @@ let playerPool = {
 	},
 	
 	dropPlayer: function(index) {
-		this.players[index].dropped = true;
-		this.droppedPlayers = this.droppedPlayers.concat(this.players.splice(index, 1));
+		let playerToDrop = this.players.splice(index, 1)[0];
+		playerToDrop.dropped = true;
+		this.droppedPlayers.push(playerToDrop);
 	},
 
 	removeAllPlayers: function() {
@@ -47,7 +48,7 @@ let playerPool = {
 	updateTieBreakerScoresAdjustment: function() {
 		let winsToGive = Math.floor(this.droppedPlayers.length / 2);
 		for (let winsGiven = 0; winsGiven < winsToGive; winsGiven++) {
-			shuffle(droppedPlayers);
+			shuffle(this.droppedPlayers);
 			this.droppedPlayers[winsGiven].winnerScoreAdjustment++;
 		}
 		for (let x = winsToGive; x < this.droppedPlayers.length;x++) {
