@@ -94,7 +94,7 @@ function getPairsListTableRow(rowNum, players) {
 	let removeButton = document.createElement("button");
 	removeButton.textContent = "remove";
 	removeButton.className = "btn btn-danger";
-	removeButton.onclick = "removeConfirmation(" + rowNum + ")";
+	removeButton.addEventListener("click", (event) => {removeConfirmation(rowNum)});
 	removeButtonDisplay.appendChild(removeButton);
 	removeButtonDisplay.className = "printHidden";
 	tableRow.appendChild(removeButtonDisplay);
