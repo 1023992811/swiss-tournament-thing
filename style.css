@@ -4,9 +4,19 @@ body {
 
 #playerList {
   text-transform: capitalize;
+  border-collapse: separate;
+  border-spacing: 0 2vh;
 }
 
-#vangSwissRow {
+#playerList tr:nth-child(even) {
+  background-color: grey;
+}
+
+#playerList tr:nth-child(1) {
+  background-color: transparent;
+}
+
+#playerList :nth-child() #vangSwissRow {
   margin-bottom: 0;
   padding-bottom: 500px;
 }
@@ -38,7 +48,7 @@ body {
   flex-direction: column;
   width: 80%;
   margin: 0 auto;
-  margin-top: 5%;
+  margin-top: 2%;
 }
 
 #tournamentButtons {
@@ -56,4 +66,13 @@ body {
   flex-direction: column;
   text-align: center;
   margin: 0 auto;
+}
+
+#addPlayerSection button {
+  width: 15%;
+}
+
+.form-group input {
+  margin: 0 auto;
+  margin-bottom: 1vh;
 }

@@ -18,22 +18,25 @@
         <h1 id="tournamentTitle">Swiss Tournament</h1>
         <div id="addPlayerSection">
           <div class="form-group">
-            <label for="newPlayerInput">Add New Player</label>
+            <label for="newPlayerInput"><h5>Add New Player</h5></label>
             <input
               type="text"
               id="newPlayerName"
               class="form-control"
               placeholder="name here"
             />
+            <button
+              onclick='{createPlayer(document.getElementById("newPlayerName").value); document.getElementById("newPlayerName").value = ""}'
+              type="button"
+              class="btn btn-primary"
+              id="addPlayerButton"
+            >
+              Add Player
+            </button>
+            <br>
+            <br>
+            <button type="button" class="btn btn-info" onClick="printSheet()">Print</button>
           </div>
-          <button
-            onclick='createPlayer(document.getElementById("newPlayerName").value)'
-            type="button"
-            class="btn btn-primary"
-            id="addPlayerButton"
-          >
-            Add Player
-          </button>
         </div>
       </div>
 
@@ -84,9 +87,17 @@
           </button>
         </div>
       </div>
+      <iframe
+        name="print_frame"
+        width="0"
+        height="0"
+        frameborder="0"
+        src="about:blank"
+        id="printOutFrame"
+      ></iframe>
     </div>
     <footer></footer>
-    
+
     <script src="js/bracket.js"></script>
     <script src="js/player.js"></script>
     <script src="js/swiss.js"></script>
@@ -97,10 +108,22 @@
         if (event.keyCode === 13) {
           event.preventDefault();
           document.getElementById("addPlayerButton").click();
+          input.value = "";
         }
       });
+
+      function printSheet() {
+
+        window.frames[
+          "print_frame"
+        ].document.body.innerHTML = document.getElementById(
+          "tournamentInfo"
+        ).innerHTML;
+        window.frames["print_frame"].window.focus();
+        window.frames["print_frame"].window.print();
+      }
     </script>
-      <!-- Boostrap -->
+    <!-- Boostrap -->
     <script
       src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
       integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
