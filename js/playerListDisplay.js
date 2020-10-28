@@ -103,7 +103,7 @@ function getPairsListTableRow(rowNum, players) {
 	let dropPlayerMark = document.createElement("input");
 	dropPlayerMark.type = "checkbox";
 	dropPlayerMark.className = "dropInput";
-	dropPlayerMark.onclick = "enableDropButton()";
+	dropPlayerMark.addEventListener("click", enableDropButton);
 	dropPlayerDisplay.appendChild(dropPlayerMark);
 	dropPlayerDisplay.className = "printHidden";
 	tableRow.appendChild(dropPlayerDisplay);
