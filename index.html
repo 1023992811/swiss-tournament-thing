@@ -11,6 +11,7 @@
       crossorigin="anonymous"
     />
     <link rel="stylesheet" href="style.css" />
+	<link rel="stylesheet" media="print" href="print.css" />
   </head>
   <body>
     <div id="vanguardApp">
@@ -25,8 +26,9 @@
               class="form-control"
               placeholder="name here"
             />
+            </div>
             <button
-              onclick='{createPlayer(document.getElementById("newPlayerName").value); document.getElementById("newPlayerName").value = ""}'
+              onclick='swissCreatePlayer(document.getElementById("newPlayerName").value)'
               type="button"
               class="btn btn-primary"
               id="addPlayerButton"
@@ -36,50 +38,62 @@
             <br>
             <br>
             <button type="button" class="btn btn-info" onClick="printSheet()">Print</button>
-          </div>
         </div>
       </div>
 
       <div id="tournamentInfo">
         <h1 id="roundDisplay">Round 0</h1>
         <table id="playerList">
-          <tr id="vangSwissRow">
-            <th>table number</th>
-            <th>player name</th>
-            <th>score</th>
-            <th>Total scores</th>
-            <th>first or second</th>
-            <th>first count</th>
-            <th>
-              <button
-                onclick="removeAllPlayers()"
-                type="button"
-                class="btn btn-danger"
-              >
-                Remove All Players
-              </button>
-            </th>
-            <th>had bye</th>
-          </tr>
+		  <tbody id="vangSwissRow">
+            <tr>
+              <th>table number</th>
+              <th>player name</th>
+              <th class="print-hidden">select winners</th>
+              <th>scores</th>
+              <th>first or second</th>
+              <th class="print-hidden">first count</th>
+              <th class="print-hidden">
+                <button
+                  onclick="removeAllPlayersConfirmation()"
+                  type="button"
+                  class="btn btn-danger"
+                >
+                  Remove All Players
+                </button>
+              </th>
+			  <th class="print-hidden">players to drop</th>
+              <th class="print-hidden">had bye</th>
+            </tr>
+		  </tbody>
+		  <tbody id=players></tbody>
         </table>
         <div id="tournamentButtons">
           <button
-            onclick="initBracket()"
+            onclick="swissInitBracket()"
             type="button"
             class="btn btn-secondary"
           >
             Start Bracket/Reset to Round 1
           </button>
+		  <button 
+			onclick="dropAndPair()"
+			id="dropButton"
+			type="button"
+			class="btn btn-secondary"
+			disabled=true;
+		  >
+			Drop Marked Players
+		  </button>
           <button
-            onclick="nextRound()"
+            onclick="swissNextRound()"
             id="nextRoundButton"
             type="button"
             class="btn btn-secondary"
           >
-            Next Round
+            Drop Players And Next Round
           </button>
           <button
-            onclick="endBracket()"
+            onclick="swissEndBracket()"
             type="button"
             class="btn btn-secondary"
           >
@@ -97,10 +111,12 @@
       ></iframe>
     </div>
     <footer></footer>
-
-    <script src="js/bracket.js"></script>
+    <script src="js/playerPool.js"></script>
     <script src="js/player.js"></script>
     <script src="js/swiss.js"></script>
+	<script src="js/listUtils.js"></script>
+	<script src="js/playerListDisplay.js"></script>
+	<script src="js/debugHelper.js"></script>
     <script>
       // input field triggered by enter
       let input = document.getElementById("newPlayerName");

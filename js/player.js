@@ -1,10 +1,10 @@
-const playerRoundStatuses = {
-	FIRST: 1,
-	SECOND: 0,
-	BYE: 2
-};
-
 class SwissPlayer {
+	static roundStatuses = {
+		FIRST: 1,
+		SECOND: 0,
+		BYE: 2
+	}
+	
 	constructor(name) {
 		this.name = name;
 		this.reset();
@@ -14,31 +14,51 @@ class SwissPlayer {
 		this.firstCount = 0;
 		this.score = 0;
 		this.prevPlayerCount = 0;
-		this.roundStatus = playerRoundStatuses.BYE;
-		this.prevPlayers = [];
+		this.TieBreakerScoreAdjustment = 0;
+		this.roundStatus = SwissPlayer.roundStatuses.SECOND;
+		this.playersWonTo = [];
 		this.playersLostTo = [];
 		this.hadBye = false;
+		this.dropped = false;
+		this.currentOpponent = null;
 	}
 	
 	isFirst() {
-		return this.roundStatus === playerRoundStatuses.FIRST;
+		return this.roundStatus === SwissPlayer.roundStatuses.FIRST;
 	}
 	
 	isSecond() {
-		return this.roundStatus === playerRoundStatuses.SECOND;
+		return this.roundStatus === SwissPlayer.roundStatuses.SECOND;
 	}
 	
 	isBye() {
-		return this.roundStatus === playerRoundStatuses.BYE;
+		return this.roundStatus === SwissPlayer.roundStatuses.BYE;
 	}
 	
 	isUniqueOpponent(opponent) {
-		for (let player of this.prevPlayers) {
+		return !(this.isPlayerLostTo(opponent) || this.isPlayerWonTo(opponent))
+	}
+	
+	isPlayerLostTo(opponent) {
+		for (let player of this.playersLostTo) {
 			if (player === opponent) {
-				return false;
+				return true;
 			}
 		}
-		return true;
+		return false;
+	}
+	
+	isPlayerWonTo(opponent) {
+		for (let player of this.playersWonTo) {
+			if (player === opponent) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	getScoreString() {
+		return (this.score) + "-" + (this.playersLostTo.length);
 	}
 	
 	/*
@@ -50,24 +70,42 @@ class SwissPlayer {
 	newRound(roundStatus, opponent) {
 		this.roundStatus = roundStatus;
 		if (!this.isBye()) {
-			this.firstCount += roundStatus;
-			if (this.isUniqueOpponent(opponent))
-				this.prevPlayers.push(opponent);
+			this.currentOpponent = opponent;
 		} else {
-			this.hadBye = true;
-			this.firstCount++;
+			this.currentOpponent = null;
 		}
+	}
+	
+	tallyScore(won) {
+		if(won) {
+			this.score++;
+			if (this.isBye()) this.hadBye = true;
+			else if (this.isUniqueOpponent(this.currentOpponent)) this.playersWonTo.push(this.currentOpponent);
+		} else {
+			if (this.isUniqueOpponent(this.currentOpponent)) this.playersLostTo.push(this.currentOpponent);
+		}
+		if (this.isFirst()) this.firstCount++;
 	}
 	
 	updatePrevPlayerCount(players) {
 		this.prevPlayerCount = 0;
-		for (let prevPlayer of this.prevPlayers) {
-			for (let player of players) {
-				if (player === prevPlayer) {
-					this.prevPlayerCount++;
-					break;
-				}
+		for (let player of players) {
+			if (!this.isUniqueOpponent(player)) {
+				this.prevPlayerCount++;
 			}
+		}
+	}
+	
+	updateTieBreakerScores() {
+		this.loserScore = 0;
+		for (let player of this.playersLostTo) {
+			this.loserScore += player.score;
+			this.loserScore += player.TieBreakerScoreAdjustment;
+		}
+		this.winnerScore = 0;
+		for (let player of this.playersWonTo) {
+			this.winnerScore += player.score;
+			this.winnerScore += player.TieBreakerScoreAdjustment;
 		}
 	}
 	
