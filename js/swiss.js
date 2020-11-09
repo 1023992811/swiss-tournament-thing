@@ -70,7 +70,7 @@ function matchPlayersByScoreBuckets() {
 		writeToList(bucket, matchedPlayers, bucketStart);
 		bucketStart += bucket.length - bucket.length % 2;
 		bucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
-		if ((bucketEnd - bucketStart) === 1) {
+		if (bucketStart === matchedPlayers.length - 1) {
 			matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.roundStatuses.BYE);
 			bucketStart++;
 		}
@@ -141,7 +141,7 @@ function matchRemainingPlayers(scoreBucket) {
 }
 
 function findScoreBucketEnd(players, bucketStart) {
-	if (players[bucketStart] != undefined) {
+	if (players[bucketStart] !== undefined) {
 		let currentScoreBucket = players[bucketStart].score;
 		for (let x = bucketStart; x < players.length; x++) {
 			if (currentScoreBucket !== players[x].score) {

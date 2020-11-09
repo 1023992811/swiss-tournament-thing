@@ -47,6 +47,7 @@ let playerPool = {
 	
 	updateTieBreakerScoresAdjustment: function() {
 		let winsToGive = Math.floor(this.droppedPlayers.length / 2);
+		winsToGive += Number((this.droppedPlayers.length % 2 === 1) && (this.players % 2 === 0));
 		for (let x = 0; x < winsToGive; x++) {
 			shuffle(this.droppedPlayers);
 			this.droppedPlayers[x].TieBreakerScoreAdjustment++;
