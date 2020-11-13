@@ -16,7 +16,7 @@ function swissInitBracket() {
 	playerPool.undropAllPlayers();
 	playerPool.resetAllPlayers();
 	
-	shuffle(playerPool.players);
+	//shuffle(playerPool.players);
 	let players = playerPool.players;
 	for (let x = 0; x < players.length - 1; x += 2) {
 		players[x].newRound(SwissPlayer.roundStatuses.FIRST, players[x+1]);
@@ -64,16 +64,19 @@ function matchPlayersByScoreBuckets() {
 	matchedPlayers.sort(comparePlayersByScore);
 	let bucketStart = 0;
 	let bucketEnd = findScoreBucketEnd(matchedPlayers, bucketStart);
-	while ((bucketEnd - bucketStart) > 0 || bucketEnd < players.length) {
+	while ((bucketEnd - bucketStart) > 1 || bucketEnd < players.length) {
 		let bucket = matchedPlayers.slice(bucketStart, bucketEnd);
 		bucket = matchPlayersInScoreBucket(bucket);
 		writeToList(bucket, matchedPlayers, bucketStart);
 		bucketStart += bucket.length - bucket.length % 2;
 		bucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
-		if (bucketStart === matchedPlayers.length - 1) {
-			matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.roundStatuses.BYE);
-			bucketStart++;
+		let nextBucketEnd = findScoreBucketEnd(matchedPlayers, bucketEnd);
+		if (nextBucketEnd - bucketEnd === 1) {
+			bucketEnd = nextBucketEnd;
 		}
+	}
+	if (matchedPlayers.length % 2 === 1) {
+		matchedPlayers[matchedPlayers.length-1].newRound(SwissPlayer.roundStatuses.BYE);
 	}
 	return matchedPlayers;
 }
