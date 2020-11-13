@@ -16,7 +16,7 @@ function swissInitBracket() {
 	playerPool.undropAllPlayers();
 	playerPool.resetAllPlayers();
 	
-	//shuffle(playerPool.players);
+	shuffle(playerPool.players);
 	let players = playerPool.players;
 	for (let x = 0; x < players.length - 1; x += 2) {
 		players[x].newRound(SwissPlayer.roundStatuses.FIRST, players[x+1]);
