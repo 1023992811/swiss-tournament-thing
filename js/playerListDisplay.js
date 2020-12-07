@@ -141,6 +141,15 @@ function getPlacementListTableRow(rowNum, players) {
 	return tableRow;
 }
 
+function addPlayer() {
+	let playerNames = document.getElementById("newPlayerNames").value.split("\n");
+	for (let playerName of playerNames) {
+		if (playerName.trim() !== "") {
+			swissCreatePlayer(playerName);
+		}
+	}
+}
+
 function removeConfirmation(playerCell) {
   if (window.confirm("Do you really want to remove this player?")) {
 	playerPool.removePlayer(playerCell);

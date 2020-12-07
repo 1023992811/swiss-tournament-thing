@@ -1,137 +1,125 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Swiss Tournament Thing</title>
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-      integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
-      crossorigin="anonymous"
-    />
-    <link rel="stylesheet" href="style.css" />
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+	<title>Swiss Tournament Thing</title>
+	<link
+		rel="stylesheet"
+		href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+		integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+		crossorigin="anonymous"
+	/>
+	<link rel="stylesheet" href="style.css" />
 	<link rel="stylesheet" media="print" href="print.css" />
-  </head>
-  <body>
-    <div id="vanguardApp">
-      <div id="vanguardHead">
-        <h1 id="tournamentTitle">Swiss Tournament</h1>
-        <div id="addPlayerSection">
-          <div class="form-group">
-            <label for="newPlayerInput">Add New Player</label>
-            <input
-              type="text"
-              id="newPlayerName"
-              class="form-control"
-              placeholder="name here"
-            />
-          </div>
-          <button
-            onclick='swissCreatePlayer(document.getElementById("newPlayerName").value)'
-            type="button"
-            class="btn btn-primary"
-            id="addPlayerButton"
-          >
-            Add Player
-          </button>
-        </div>
-      </div>
+</head>
+<body>
+	<div id="vanguardApp">
+		<div id="vanguardHead">
+			<h1 id="tournamentTitle">Swiss Tournament</h1>
+			<div id="addPlayerSection">
+				<div class="form-group">
+					<label for="newPlayerNames">Add New Player</label>
+					<textarea
+						id="newPlayerNames"
+						class="form-control"
+						placeholder="bulk add"
+						rows="4"
+					></textarea>
+				</div>
+				<button
+					onclick='addPlayer()'
+					type="button"
+					class="btn btn-primary"
+					id="addPlayerButton"
+				>Add Player</button>
+			</div>
+		</div>
 
-      <div id="tournamentInfo">
-        <h1 id="roundDisplay">Round 0</h1>
-        <table id="playerList">
-		  <tbody id="vangSwissRow">
-            <tr>
-              <th>table number</th>
-              <th>player name</th>
-              <th class="print-hidden">select winners</th>
-              <th>scores</th>
-              <th>first or second</th>
-              <th class="print-hidden">first count</th>
-              <th class="print-hidden">
-                <button
-                  onclick="removeAllPlayersConfirmation()"
-                  type="button"
-                  class="btn btn-danger"
-                >
-                  Remove All Players
-                </button>
-              </th>
-			  <th class="print-hidden">players to drop</th>
-              <th class="print-hidden">had bye</th>
-            </tr>
-		  </tbody>
-		  <tbody id=players></tbody>
-        </table>
-        <div id="tournamentButtons">
-          <button
-            onclick="swissInitBracket()"
-            type="button"
-            class="btn btn-secondary"
-          >
-            Start Bracket/Reset to Round 1
-          </button>
-		  <button 
-			onclick="dropAndPair()"
-			id="dropButton"
-			type="button"
-			class="btn btn-secondary"
-			disabled=true;
-		  >
-			Drop Marked Players
-		  </button>
-          <button
-            onclick="swissNextRound()"
-            id="nextRoundButton"
-            type="button"
-            class="btn btn-secondary"
-          >
-            Drop Players And Next Round
-          </button>
-          <button
-            onclick="swissEndBracket()"
-            type="button"
-            class="btn btn-secondary"
-          >
-            End Bracket
-          </button>
-        </div>
-      </div>
-    </div>
-    <footer></footer>
-    
-    <script src="js/playerPool.js"></script>
-    <script src="js/player.js"></script>
-    <script src="js/swiss.js"></script>
+		<div id="tournamentInfo">
+			<h1 id="roundDisplay">Round 0</h1>
+			<table id="playerList">
+				<tbody id="vangSwissRow">
+					<tr>
+						<th>table number</th>
+						<th>player name</th>
+						<th class="print-hidden">select winners</th>
+						<th>scores</th>
+						<th>first or second</th>
+						<th class="print-hidden">first count</th>
+						<th class="print-hidden">
+							<button
+								onclick="removeAllPlayersConfirmation()"
+								type="button"
+								class="btn btn-danger"
+							>Remove All Players</button>
+						</th>
+						<th class="print-hidden">players to drop</th>
+						<th class="print-hidden">had bye</th>
+					</tr>
+				</tbody>
+				<tbody id=players></tbody>
+			</table>
+			<div id="tournamentButtons">
+				<button
+					onclick="swissInitBracket()"
+					type="button"
+					class="btn btn-secondary"
+				>Start Bracket/Reset to Round 1</button>
+				<button 
+					onclick="dropAndPair()"
+					id="dropButton"
+					type="button"
+					class="btn btn-secondary"
+					disabled=true;
+				>Drop Marked Players</button>
+				<button
+					onclick="swissNextRound()"
+					id="nextRoundButton"
+					type="button"
+					class="btn btn-secondary"
+				>Drop Players And Next Round</button>
+				<button
+					onclick="swissEndBracket()"
+					type="button"
+					class="btn btn-secondary"
+				>End Bracket</button>
+			</div>
+		</div>
+	</div>
+	<footer></footer>
+
+	<script src="js/playerPool.js"></script>
+	<script src="js/player.js"></script>
+	<script src="js/swiss.js"></script>
 	<script src="js/listUtils.js"></script>
 	<script src="js/playerListDisplay.js"></script>
 	<script src="js/debugHelper.js"></script>
-    <script>
-      // input field triggered by enter
-      let input = document.getElementById("newPlayerName");
-      input.addEventListener("keyup", (event) => {
-        if (event.keyCode === 13) {
-          event.preventDefault();
-          document.getElementById("addPlayerButton").click();
-        }
-      });
-    </script>
-      <!-- Boostrap -->
-    <script
-      src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
-      integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
-      integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
-      crossorigin="anonymous"
-    ></script>
-    <script
-      src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
-      integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+	<script>
+		// input field triggered by enter
+		let input = document.getElementById("newPlayerNames");
+		input.addEventListener("keyup", (event) => {
+			if (event.keyCode === 13 && event.ctrlKey) {
+				event.preventDefault();
+				document.getElementById("addPlayerButton").click();
+			}
+		});
+	</script>
+	<!-- Boostrap -->
+	<script
+		src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+		integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+		integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+		crossorigin="anonymous"
+	></script>
+	<script
+		src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+		integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+		crossorigin="anonymous"
+	></script>
+</body>
 </html>
