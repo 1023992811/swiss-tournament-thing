@@ -98,7 +98,7 @@
 	<script>
 		// input field triggered by enter
 		let input = document.getElementById("newPlayerNames");
-		input.addEventListener("keyup", (event) => {
+		input.addEventListener("keydown", (event) => {
 			if (event.keyCode === 13 && event.ctrlKey) {
 				event.preventDefault();
 				document.getElementById("addPlayerButton").click();

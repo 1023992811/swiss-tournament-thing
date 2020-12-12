@@ -3,11 +3,6 @@ let roundCount = 0;
 
 //button functions
 
-function swissCreatePlayer(name) {
-	playerPool.createPlayer(name);
-	updateDisplay();
-}
-
 function swissInitBracket() {
 	//swissSeedPlayers();
 	

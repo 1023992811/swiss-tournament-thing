@@ -124,7 +124,6 @@ const placementListHeader =
 		"<th class='printHidden'>loser scores</th>\n" +
 		"<th class='printHidden'>winner scores</th>\n" +
 		"<th>dropped</th>\n" +
-		"<th class='printHidden'><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"</tr>\n";
 
 function getPlacementListTableRow(rowNum, players) {
@@ -136,7 +135,6 @@ function getPlacementListTableRow(rowNum, players) {
 		"<td class='printHidden'>" + (players[rowNum].loserScore) + "</td>\n" +
 		"<td class='printHidden'>" + (players[rowNum].winnerScore) + "</td>\n" +
 		"<td>" + (players[rowNum].dropped) + "</td>\n" +
-		"<td class='printHidden'><button type='button' class='btn btn-danger' onclick=removeConfirmation(" + rowNum + ")>Remove</button></td>\n" +
 		"</tr>\n";
 	return tableRow;
 }
@@ -145,9 +143,10 @@ function addPlayer() {
 	let playerNames = document.getElementById("newPlayerNames").value.split("\n");
 	for (let playerName of playerNames) {
 		if (playerName.trim() !== "") {
-			swissCreatePlayer(playerName);
+			playerPool.createPlayer(name);
 		}
 	}
+	updateDisplay();
 }
 
 function removeConfirmation(playerCell) {
