@@ -21,6 +21,10 @@ class SwissPlayer {
 		this.hadBye = false;
 		this.dropped = false;
 		this.currentOpponent = null;
+		this.loserScore = 0;
+		this.winnerScore = 0;
+		this.tier2loserScore = 0;
+		this.tier2winnerScore = 0;
 	}
 	
 	isFirst() {
@@ -61,6 +65,10 @@ class SwissPlayer {
 		return (this.score) + "-" + (this.playersLostTo.length);
 	}
 	
+	getOpponentsList() {
+		return [].concat(this.playersLostTo).concat(this.playersWonTo);
+	}
+	
 	/*
 		function to call when this player enters a new round
 		roundStatus: the status of the player this round, reference the
@@ -84,7 +92,7 @@ class SwissPlayer {
 		} else {
 			if (this.isUniqueOpponent(this.currentOpponent)) this.playersLostTo.push(this.currentOpponent);
 		}
-		if (this.isFirst()) this.firstCount++;
+		this.firstCount += this.isFirst();
 	}
 	
 	updatePrevPlayerCount(players) {
@@ -98,15 +106,29 @@ class SwissPlayer {
 	
 	updateTieBreakerScores() {
 		this.loserScore = 0;
+		this.tier2loserScore = 0;
 		for (let player of this.playersLostTo) {
-			this.loserScore += player.score;
-			this.loserScore += player.TieBreakerScoreAdjustment;
+			this.loserScore += player.getTier1TieBreakerScore();
+			this.tier2loserScore += player.getTier2TiebreakerScore();
 		}
 		this.winnerScore = 0;
+		this.tier2winnerScore = 0;
 		for (let player of this.playersWonTo) {
-			this.winnerScore += player.score;
-			this.winnerScore += player.TieBreakerScoreAdjustment;
+			this.winnerScore += player.getTier1TieBreakerScore()
+			this.tier2winnerScore += player.getTier2TiebreakerScore();
 		}
+	}
+	
+	getTier1TieBreakerScore() {
+		return this.score + this.TieBreakerScoreAdjustment;
+	}
+	
+	getTier2TiebreakerScore() {
+		let tier2Score = 0;
+		for (let player of this.getOpponentsList()) {
+			tier2Score += player.getTier1TieBreakerScore();
+		}
+		return tier2Score;
 	}
 	
 	clone() {

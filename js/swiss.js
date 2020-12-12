@@ -38,8 +38,8 @@ function swissNextRound() {
 function swissEndBracket() {
 	bracketEnded = true;
 	playerPool.updateTieBreakerScores();
-	playerPool.players = playerPool.players.sort(comparePlayersByTiebreaking);
-	playerPool.droppedPlayers = playerPool.droppedPlayers.sort(comparePlayersByTiebreaking);
+	playerPool.players = playerPool.players.sort(comparePlayersByTiebreak);
+	playerPool.droppedPlayers = playerPool.droppedPlayers.sort(comparePlayersByTiebreak);
 	playerPool.undropAllPlayers();
 	updateDisplay();
 }
@@ -174,4 +174,46 @@ function findUniqueOpponentIndex(currentPlayerIndex, players) {
 		}
 	}
 	return -1;
+}
+
+function comparePlayersByTiebreak(a, b) {
+	let result = comparePlayersByScore(a, b);
+	if (result === 0) {
+		result = comparePlayersByLoserScore(a, b);
+	}
+	if (result === 0) {
+		result = comparePlayersByWinnerScore(a, b);
+	}
+	if (result === 0) {
+		result = comparePlayersByTier2LoserScore(a, b);
+	}
+	if (result === 0) {
+		result = comparePlayersByTier2WinnerScore(a, b);
+	}
+	if (result === 0) {
+		result = comparePlayersByHeadToHead(a, b);
+	}
+	return result;
+}
+
+function comparePlayersByLoserScore(a, b) {
+	return b.loserScore - a.loserScore;
+}
+
+function comparePlayersByWinnerScore(a, b) {
+	return b.winnerScore - a.winnerScore;
+}
+
+function comparePlayersByTier2LoserScore(a, b) {
+	return b.tier2loserScore - a.tier2loserScore;
+}
+
+function comparePlayersByTier2WinnerScore(a, b) {
+	return b.tier2winnerScore - a.tier2winnerScore;
+}
+
+function comparePlayersByHeadToHead(a, b) {
+	let result = Number(a.isPlayerLostTo(b));
+	result -= Number(b.isPlayerLostTo(a));
+	return result;
 }

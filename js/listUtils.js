@@ -10,38 +10,10 @@ function comparePlayersByPrevPlayerCount(a,b) {
 	return b.prevPlayerCount - a.prevPlayerCount;
 }
 
-function comparePlayersByLoserScore(a, b) {
-	return b.loserScore - a.loserScore;
-}
-
-function comparePlayersByWinnerScore(a, b) {
-	return b.winnerScore - a.winnerScore;
-}
-
-function comparePlayersByHeadToHead(a, b) {
-	let result = Number(a.isPlayerLostTo(b));
-	result -= Number(b.isPlayerLostTo(a));
-	return result;
-}
-
 function comparePlayersByPriorityAndFirstCount(a, b) {
 	let result = comparePlayersByPrevPlayerCount(a, b);
 	if (result === 0)
 		result = comparePlayersByFirstCount(b, a);
-	return result;
-}
-
-function comparePlayersByTiebreaking(a, b) {
-	let result = comparePlayersByScore(a, b);
-	if (result === 0) {
-		result = comparePlayersByLoserScore(a, b);
-		if (result === 0) {
-			result = comparePlayersByWinnerScore(a, b);
-			if (result === 0 ) {
-				result = comparePlayersByHeadToHead(a, b);
-			}
-		}
-	}
 	return result;
 }
 

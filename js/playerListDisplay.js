@@ -123,6 +123,8 @@ const placementListHeader =
 		"<th>final scores</th>\n" +
 		"<th class='printHidden'>loser scores</th>\n" +
 		"<th class='printHidden'>winner scores</th>\n" +
+		"<th class='printHidden'>tier2 loser scores</th>\n" +
+		"<th class='printHidden'>tier2 winner scores</th>\n" +
 		"<th>dropped</th>\n" +
 	"</tr>\n";
 
@@ -134,6 +136,8 @@ function getPlacementListTableRow(rowNum, players) {
 		"<td>" + (players[rowNum].getScoreString()) + "</td>\n" +
 		"<td class='printHidden'>" + (players[rowNum].loserScore) + "</td>\n" +
 		"<td class='printHidden'>" + (players[rowNum].winnerScore) + "</td>\n" +
+		"<td class='printHidden'>" + (players[rowNum].tier2loserScore) + "</td>\n" +
+		"<td class='printHidden'>" + (players[rowNum].tier2winnerScore) + "</td>\n" +
 		"<td>" + (players[rowNum].dropped) + "</td>\n" +
 		"</tr>\n";
 	return tableRow;
