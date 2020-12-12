@@ -7,6 +7,7 @@ function updateDisplay() {
 	else
 		displayPairsList(players);
 	enableDropButton();
+	enableNextRoundButton();
 }
 
 function displayPairsList(players) {
@@ -150,6 +151,7 @@ function addPlayer() {
 			playerPool.createPlayer(name);
 		}
 	}
+	swissInitialized = false;
 	updateDisplay();
 }
 
@@ -169,6 +171,10 @@ function removeAllPlayersConfirmation() {
 	playerPool.removeAllPlayers();
 	updateDisplay();
   }
+}
+
+function enableNextRoundButton() {
+	document.getElementById("nextRoundButton").disabled = !swissInitialized;
 }
 
 function enableDropButton() {

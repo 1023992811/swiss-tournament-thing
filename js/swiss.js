@@ -1,4 +1,5 @@
 let bracketEnded = false;
+let swissInitialized = false;
 let roundCount = 0;
 
 //button functions
@@ -22,6 +23,7 @@ function swissInitBracket() {
 		players[players.length-1].newRound(SwissPlayer.roundStatuses.BYE);
 	
 	debugHelper.logUniquePairsCount(players);
+	swissInitialized = true;
 	updateDisplay();
 }
 
@@ -37,6 +39,7 @@ function swissNextRound() {
 
 function swissEndBracket() {
 	bracketEnded = true;
+	swissInitialized = false;
 	playerPool.updateTieBreakerScores();
 	playerPool.players = playerPool.players.sort(comparePlayersByTiebreak);
 	playerPool.droppedPlayers = playerPool.droppedPlayers.sort(comparePlayersByTiebreak);
