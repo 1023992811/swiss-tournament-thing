@@ -8,6 +8,7 @@ function updateDisplay() {
 		displayPairsList(players);
 	enableDropButton();
 	enableNextRoundButton();
+	enableEndBracketButton();
 }
 
 function displayPairsList(players) {
@@ -148,7 +149,7 @@ function addPlayer() {
 	let playerNames = document.getElementById("newPlayerNames").value.split("\n");
 	for (let playerName of playerNames) {
 		if (playerName.trim() !== "") {
-			playerPool.createPlayer(name);
+			playerPool.createPlayer(playerName);
 		}
 	}
 	swissInitialized = false;
@@ -175,6 +176,10 @@ function removeAllPlayersConfirmation() {
 
 function enableNextRoundButton() {
 	document.getElementById("nextRoundButton").disabled = !swissInitialized;
+}
+
+function enableEndBracketButton() {
+	document.getElementById("endBracketButton").disabled = bracketEnded;
 }
 
 function enableDropButton() {

@@ -8,6 +8,7 @@ function swissInitBracket() {
 	//swissSeedPlayers();
 	
 	bracketEnded = false;
+	swissInitialized = true;
 	roundCount = 1;
 	playerPool.undropAllPlayers();
 	playerPool.resetAllPlayers();
@@ -23,7 +24,6 @@ function swissInitBracket() {
 		players[players.length-1].newRound(SwissPlayer.roundStatuses.BYE);
 	
 	debugHelper.logUniquePairsCount(players);
-	swissInitialized = true;
 	updateDisplay();
 }
 
