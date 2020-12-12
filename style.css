@@ -46,8 +46,10 @@ body {
 }
 
 #tournamentButtons {
-  margin: 0 auto;
-  margin-top: 2%;
+	position: fixed;
+	bottom: 0%;
+	padding: 10px;
+	background-color:white;
 }
 
 #roundDisplay {
@@ -60,4 +62,10 @@ body {
   flex-direction: column;
   text-align: center;
   margin: 0 auto;
+}
+
+.tournamentButtons-placeholder {
+	visibility: hidden;
+	padding: 10px;
+	background-color:white;
 }
