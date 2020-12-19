@@ -84,7 +84,7 @@ function getPairsListTableRow(rowNum, players) {
 		? "first"
 		: players[rowNum].isSecond()
 		? "second"
-		: "bye")
+		: "bye");
 	tableRow.appendChild(playerStatus);
 
 	let firstCount = document.createElement("td");

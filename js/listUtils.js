@@ -10,6 +10,28 @@ function comparePlayersByPrevPlayerCount(a,b) {
 	return b.prevPlayerCount - a.prevPlayerCount;
 }
 
+function comparePlayersByLoserScore(a, b) {
+	return b.loserScore - a.loserScore;
+}
+
+function comparePlayersByWinnerScore(a, b) {
+	return b.winnerScore - a.winnerScore;
+}
+
+function comparePlayersByTier2LoserScore(a, b) {
+	return b.tier2loserScore - a.tier2loserScore;
+}
+
+function comparePlayersByTier2WinnerScore(a, b) {
+	return b.tier2winnerScore - a.tier2winnerScore;
+}
+
+function comparePlayersByHeadToHead(a, b) {
+	let result = Number(a.isPlayerLostTo(b));
+	result -= Number(b.isPlayerLostTo(a));
+	return result;
+}
+
 function comparePlayersByPriorityAndFirstCount(a, b) {
 	let result = comparePlayersByPrevPlayerCount(a, b);
 	if (result === 0)

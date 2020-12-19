@@ -10,15 +10,15 @@ let playerPool = {
 		this.players.splice(index, 1);
 	},
 	
+	removeAllPlayers: function() {
+		this.players = [];
+		this.droppedPlayers = [];
+	},
+	
 	dropPlayer: function(index) {
 		let playerToDrop = this.players.splice(index, 1)[0];
 		playerToDrop.dropped = true;
 		this.droppedPlayers.push(playerToDrop);
-	},
-
-	removeAllPlayers: function() {
-		this.players = [];
-		this.droppedPlayers = [];
 	},
 	
 	undropAllPlayers: function() {
@@ -35,6 +35,10 @@ let playerPool = {
 		for(let x = 0;x < num;x++) {
 			this.createPlayer(String(x));
 		}
+	},
+	
+	shuffle: function() {
+		shuffle(this.players);
 	},
 	
 	tallyScores: function() {
