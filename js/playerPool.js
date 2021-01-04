@@ -2,8 +2,8 @@ let playerPool = {
 	players: [],
 	droppedPlayers: [],
 
-	createPlayer: function(name) {
-		this.players.push(new SwissPlayer(name));
+	addPlayer: function(player) {
+		this.players.push(player);
 	},
 
 	removePlayer: function(index) {

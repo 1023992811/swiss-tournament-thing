@@ -1,3 +1,157 @@
+let playerDisplay = {
+
+	playerInfoCards: [],
+
+	createPlayerInfoCard: function(player) {
+		let tableRow = document.createElement("tr");
+		
+		let tableNumDisplay = document.createElement("td");
+		tableRow.appendChild(tableNumDisplay);
+		
+		let playerNameDisplay = document.createElement("td");
+		playerNameDisplay.textContent = String(player.name);
+		tableRow.appendChild(playerNameDisplay);
+
+		let scoreInputDisplay = document.createElement("td");
+		let scoreInput = document.createElement("button");
+		scoreInput.className = "scoreInput btn";
+		switchButtonToLoser(scoreInput);
+		scoreInput.addEventListener("click", (event) => { scoreInputHandler(event, scoreInput) });
+		scoreInputDisplay.appendChild(scoreInput);
+		scoreInputDisplay.className = "printHidden";
+		tableRow.appendChild(scoreInputDisplay);
+
+		let playerScore = document.createElement("td");
+		tableRow.appendChild(playerScore);
+
+		let playerStatus = document.createElement("td");
+		tableRow.appendChild(playerStatus);
+
+		let firstCount = document.createElement("td");
+		firstCount.className = "printHidden";
+		tableRow.appendChild(firstCount);
+
+		let dropPlayerDisplay = document.createElement("td");
+		let dropPlayerMark = document.createElement("input");
+		dropPlayerMark.type = "checkbox";
+		dropPlayerMark.className = "dropInput";
+		dropPlayerMark.addEventListener("click", enableDropButton);
+		dropPlayerDisplay.appendChild(dropPlayerMark);
+		dropPlayerDisplay.className = "printHidden";
+		tableRow.appendChild(dropPlayerDisplay);
+
+		let hadBye = document.createElement("td");
+		hadBye.className = "printHidden";
+		tableRow.appendChild(hadBye);
+		
+		let t1Loser = document.createElement("td");
+		t1Loser.className = "printHidden hidden";
+		tableRow.appendChild(t1Loser);
+		
+		let t1Winner = document.createElement("td");
+		t1Winner.className = "printHidden hidden";
+		tableRow.appendChild(t1Winner);
+		
+		let t2Loser = document.createElement("td");
+		t2Loser.className = "printHidden hidden";
+		tableRow.appendChild(t2Loser);
+		
+		let t2Winner = document.createElement("td");
+		t2Winner.className = "printHidden hidden";
+		tableRow.appendChild(t2Winner);
+
+		let dropped = document.createElement("td");
+		dropped.className = "printHidden hidden";
+		tableRow.appendChild(dropped);
+
+		this.playerInfoCards.push({
+			player: player,
+			tableRow: tableRow,
+			cells: {
+				tableNumDisplay: tableNumDisplay,
+				scoreInputDisplay: scoreInputDisplay,
+				playerScore: playerScore,
+				playerStatus: playerStatus,
+				firstCount: firstCount,
+				dropPlayerDisplay: dropPlayerDisplay,
+				hadBye: hadBye,
+				t1Loser: t1Loser,
+				t1Winner: t1Winner,
+				t2Loser: t2Loser,
+				t2Winner: t2Winner,
+				dropped: dropped,
+			},
+		});
+	},
+
+	toggleHiddens: function() {
+		for (let card of this.playerInfoCards) {
+			for (let cell in card.cells) {
+				cell.classList.toggle("hidden");
+			}
+		}
+	},
+	
+	updateCardForPairsList: function() {
+		this.matchPlayerPoolOrder();
+		
+		for (let rowNum = 0;rowNum < this.playerInfoCards.length;rowNum++) {
+			let card = playerInfoCards[rowNum];
+			let tableNum = Math.floor(rowNum / 2) + 1;
+			
+			if (tableNum % 2) card.tableRow.classList.add("oddTable");
+
+			let scoreInput = card.cells.scoreInputDisplay.childNodes[0];
+			
+			card.cells.tableNumDisplay.textContent = tableNum;
+			
+			scoreInput.name = "table" + tableNum;
+			if (rowNum % 2 === 0) switchButtonToWinner(scoreInput);
+			
+			card.cells.playerScore.textContent = card.player.getScoreString();
+			
+			card.cells.playerStatus.textContent = (card.player.isFirst()
+				? "first"
+				: card.player.isSecond()
+					? "second"
+					: "bye");
+					
+			card.cells.firstCount.textContent = card.player.firstCount;
+			
+			card.cells.hadBye.textContent = card.player.hadBye;
+		}
+		
+	}
+	
+	updateCardForStandingsList: function() {
+		//do placement sort here
+		
+		let placement = 1;
+		for (let card of this.playerInfoCards) {
+			card.tableRow.classList.remove("oddTable");
+			card.cells.tableNumDisplay = placement;
+			card.cells.t1Loser.textContent = card.player.loserScore;
+			card.cells.t1Winner.textContent = card.player.winnerScore;
+			card.cells.t2Loser.textContent = card.player.tier2loserScore;
+			card.cells.t2Winner.textContent = card.player.tier2winnerScore;
+			card.cells.dropped.textContent = card.player.dropped;
+		}
+	}
+	
+	matchPlayerPoolOrder: function() {
+		let current = 0
+		for (player of playerPool.players) {
+			for (let x = current;x < this.playerInfoCards.length;x++) {
+				if (player = this.playerInfoCards[x].player) {
+					swapListItems(this.playerInfoCards(current, x);
+					break;
+				}
+			}
+			current++;
+		}
+	}
+}
+
 function updateDisplay() {
 	let players = playerPool.players;
 	document.getElementById("nextRoundButton").disabled = swissBracket.ended;
@@ -44,7 +198,6 @@ const pairsListHeader =
 	"<th>scores</th>\n" +
 	"<th>first or second</th>\n" +
 	"<th class='printHidden'>first count</th>\n" +
-	"<th class='printHidden'><button type='button' class='btn btn-danger' onclick=removeAllPlayersConfirmation()>Remove All Players</button></th>\n" +
 	"<th class='printHidden'>players to drop</th>\n" +
 	"<th class='printHidden'>had bye</th>\n" +
 	"</tr>\n";
@@ -151,7 +304,9 @@ function addPlayer() {
 	let playerNames = document.getElementById("newPlayerNames").value.split("\n");
 	for (let playerName of playerNames) {
 		if (playerName.trim() !== "") {
-			playerPool.createPlayer(playerName);
+			let newPlayer = new SwissPlayer(playerName);
+			playerPool.addPlayer(newPlayer);
+			playerDisplay.createPlayerInfoCard(newPlayer);
 		}
 	}
 	updateDisplay();

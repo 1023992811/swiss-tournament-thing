@@ -70,3 +70,7 @@ body {
 	padding: 10px;
 	background-color:white;
 }
+
+.hidden {
+	display: none;
+}
