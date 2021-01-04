@@ -154,14 +154,15 @@ function addPlayer() {
 			playerPool.createPlayer(playerName);
 		}
 	}
-	swissBracket.started = false;
 	updateDisplay();
 }
 
 function startBracket() {
-	swissBracket.reset();
-	updateDisplay();
-	debugHelper.logUniquePairsCount(playerPool.players);
+	if (!swissBracket.started || window.confirm("Current tournament progress will be lost, proceed?")) {
+		swissBracket.reset();
+		updateDisplay();
+		debugHelper.logUniquePairsCount(playerPool.players);
+	}
 }
 
 function dropAndPair() {
