@@ -1,4 +1,4 @@
-#vanguardHead, h1, #tournamentButtons, .printHidden{
+#vanguardHead, h1, #tournamentButtons, .print-hidden{
 	display: none;
 }
 
@@ -8,11 +8,10 @@
 	left: 0px;
 }
 
-.table, .table-row, .table-row-item, .table-header {
-	border: 2px black solid;
+.tr, .th, .td {
 	border-collapse: collapse;
 }
 
 .oddTable {
-	border-width: 5px;
+	border: 2px black solid;
 }
