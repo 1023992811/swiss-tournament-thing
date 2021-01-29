@@ -21,7 +21,7 @@
 						<label for="newPlayerNames">Add New Player</label>
 						<textarea id="newPlayerNames" class="form-control" placeholder="bulk add" rows="4"></textarea>
 					</div>
-					<button onclick='addPlayer()' type="button" class="btn btn-primary" id="addPlayerButton">Add
+					<button onclick='players_display.add_player()' type="button" class="btn btn-primary" id="addPlayerButton">Add
 						Player</button>
 				</div>
 			</div>
@@ -37,10 +37,6 @@
 							<th>scores</th>
 							<th>first or second</th>
 							<th class="print-hidden">first count</th>
-							<th class="print-hidden">
-								<button onclick="removeAllPlayersConfirmation()" type="button"
-									class="btn btn-danger">Remove All Players</button>
-							</th>
 							<th class="print-hidden">players to drop</th>
 							<th class="print-hidden">had bye</th>
 						</tr>
@@ -51,13 +47,13 @@
 					<button class="btn btn-secondary">1</button>
 				</div>
 				<div id="tournamentButtons">
-					<button onclick="startBracket()" type="button" class="btn btn-secondary">Start Bracket/Reset to
+					<button onclick="players_display.start_bracket()" type="button" class="btn btn-secondary">Start Bracket/Reset to
 						Round 1</button>
-					<button onclick="dropAndPair()" id="dropButton" type="button" class="btn btn-secondary"
+					<button onclick="players_display.drop_and_pair()" id="dropButton" type="button" class="btn btn-secondary"
 						disabled=true>Drop Marked Players</button>
-					<button onclick="dropAndNextRound()" id="nextRoundButton" type="button" class="btn btn-secondary"
+					<button onclick="players_display.drop_and_next_round()" id="nextRoundButton" type="button" class="btn btn-secondary"
 						disabled=true>Drop Players And Next Round</button>
-					<button onclick="endBracket()" id="endBracketButton" type="button" class="btn btn-secondary">End
+					<button onclick="players_display.end_bracket()" id="endBracketButton" type="button" class="btn btn-secondary">End
 						Bracket</button>
 				</div>
 			</div>
@@ -68,7 +64,7 @@
 		<script src="js/player.js"></script>
 		<script src="js/swiss.js"></script>
 		<script src="js/listUtils.js"></script>
-		<script src="js/playerListDisplay.js"></script>
+		<script src="js/playersDisplay.js"></script>
 		<script src="js/debugHelper.js"></script>
 		<script>
 			// input field triggered by enter
