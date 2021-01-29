@@ -8,7 +8,7 @@
 	left: 0px;
 }
 
-table, tr, td, th {
+.table, .table-row, .table-row-item, .table-header {
 	border: 2px black solid;
 	border-collapse: collapse;
 }

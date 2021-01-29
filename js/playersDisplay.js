@@ -1,32 +1,28 @@
 let players_display = {
 	players_list: document.getElementById("players"),
-	table_header: document.getElementById("vangSwissRow"),
+	table_header: document.getElementById("tableHeader"),
 	
 	display_standings: false,
 	
 	pairs_list_header:
-		"<tr>\n" +
-		"<th>table number</th>" +
-		"<th>player name</th>\n" +
-		"<th class='printHidden'>select winners</th>\n" +
-		"<th>scores</th>\n" +
-		"<th>first or second</th>\n" +
-		"<th class='printHidden'>first count</th>\n" +
-		"<th class='printHidden'>players to drop</th>\n" +
-		"<th class='printHidden'>had bye</th>\n" +
-		"</tr>\n",
+		'<div class="td">table number</div>\n' +
+		'<div class="td">player name</div>\n' +
+		'<div class="td print-hidden">select winners</div>\n' +
+		'<div class="td">scores</div>\n' +
+		'<div class="td">first or second</div>\n' +
+		'<div class="td print-hidden">first count</div>\n' +
+		'<div class="td print-hidden">players to drop</div>\n' +
+		'<div class="td print-hidden">had bye</div>\n',
 		
 	placement_list_header:
-		"<tr>\n" +
-		"<th>placement</th>" +
-		"<th>player name</th>\n" +
-		"<th>final scores</th>\n" +
-		"<th class='printHidden'>loser scores</th>\n" +
-		"<th class='printHidden'>winner scores</th>\n" +
-		"<th class='printHidden'>tier2 loser scores</th>\n" +
-		"<th class='printHidden'>tier2 winner scores</th>\n" +
-		"<th>dropped</th>\n" +
-		"</tr>\n",
+		'<div class="td">placement</div>\n' +
+		'<div class="td">player name</div>\n' +
+		'<div class="td">final scores</div>\n' +
+		'<div class="td print-hidden">loser scores</div>\n' +
+		'<div class="td print-hidden">winner scores</div>\n' +
+		'<div class="td print-hidden">tier2 loser scores</div>\n' +
+		'<div class="td print-hidden">tier2 winner scores</div>\n' +
+		'<div class="td print-hidden">dropped</div>\n',
 	
 	update_display: function() {
 		document.getElementById("roundDisplay").innerHTML = "Round " + swissBracket.round_count;
@@ -41,9 +37,11 @@ let players_display = {
 	resize_players_display: function(size) {
 		let current_length = this.players_list.childElementCount;
 		for(;current_length < size;current_length++) {
-			let table_row = document.createElement("tr");
+			let table_row = document.createElement("div");
+			table_row.className = "tr";
 			for (let x = 0;x < 8;x++) {
-				let item = document.createElement("td");
+				let item = document.createElement("div");
+				item.className = "td";
 				table_row.appendChild(item);
 			}
 			this.players_list.appendChild(table_row);
@@ -70,7 +68,7 @@ let players_display = {
 		let table_num = Math.floor(row_num / 2) + 1;
 
 		let table_row = this.players_list.childNodes[row_num];
-		table_row.className = (table_num % 2 ? "oddTable" : "");
+		table_row.className = (table_num % 2 ? "tr oddTable" : "tr");
 		
 		for (td of table_row.childNodes) {
 			this.clear_td_content(td);
@@ -78,9 +76,11 @@ let players_display = {
 
 		let table_num_display = table_row.childNodes[0];
 		table_num_display.textContent = table_num;
+		table_num_display.dataHeader = "table number";
 
 		let player_name_display = table_row.childNodes[1];
 		player_name_display.textContent = String(player.name);
+		table_num_display.dataHeader = "player name";
 
 		let score_input_display = table_row.childNodes[2];
 		let score_input = document.createElement("button");
@@ -91,7 +91,7 @@ let players_display = {
 			: this.switch_button_to_loser(score_input);
 		score_input.addEventListener("click", (event) => { this.score_input_handler(event, score_input) })
 		score_input_display.appendChild(score_input);
-		score_input_display.className = "printHidden";
+		score_input_display.classList.add("printHidden");
 
 		let player_score_display = table_row.childNodes[3];
 		player_score_display.textContent = (player.getScoreString());
@@ -104,7 +104,7 @@ let players_display = {
 				: "bye");
 
 		let first_count = table_row.childNodes[5];
-		first_count.className = "printHidden";
+		first_count.classList.add("printHidden");
 		first_count.textContent = String(player.firstCount);
 
 		let dropPlayerDisplay = table_row.childNodes[6];
@@ -113,10 +113,10 @@ let players_display = {
 		dropPlayerMark.className = "dropInput";
 		dropPlayerMark.addEventListener("click", this.enable_drop_button);
 		dropPlayerDisplay.appendChild(dropPlayerMark);
-		dropPlayerDisplay.className = "printHidden";
+		dropPlayerDisplay.classList.add("printHidden");
 
 		let hadBye = table_row.childNodes[7];
-		hadBye.className = "printHidden";
+		hadBye.classList.add("printHidden");
 		hadBye.textContent = player.hadBye;
 	},
 	
@@ -135,7 +135,7 @@ let players_display = {
 
 	display_placement_list_row: function(row_num, player) {
 		let table_row = this.players_list.childNodes[row_num];
-		table_row.className = "";
+		table_row.className = "tr";
 		
 		for (td of table_row.childNodes) {
 			this.clear_td_content(td);

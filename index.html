@@ -28,21 +28,19 @@
 
 			<div id="tournamentInfo">
 				<h1 id="roundDisplay">Round 0</h1>
-				<table id="playerList">
-					<tbody id="vangSwissRow">
-						<tr>
-							<th>table number</th>
-							<th>player name</th>
-							<th class="print-hidden">select winners</th>
-							<th>scores</th>
-							<th>first or second</th>
-							<th class="print-hidden">first count</th>
-							<th class="print-hidden">players to drop</th>
-							<th class="print-hidden">had bye</th>
-						</tr>
-					</tbody>
-					<tbody id=players></tbody>
-				</table>
+				<div id="playerList" class="table">
+					<div id="tableHeader" class="tr th">
+						<div class="td">table number</div>
+						<div class="td">player name</div>
+						<div class="td print-hidden">select winners</div>
+						<div class="td">scores</div>
+						<div class="td">first or second</div>
+						<div class="td print-hidden">first count</div>
+						<div class="td print-hidden">players to drop</div>
+						<div class="td print-hidden">had bye</div>
+					</div>
+					<div id=players></div>
+				</div>
 				<div class="tournamentButtons-placeholder">
 					<button class="btn btn-secondary">1</button>
 				</div>

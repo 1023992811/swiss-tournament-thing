@@ -4,7 +4,7 @@ let swissBracket = {
 	current_standings: [],
 
 	reset: function () {
-		//swissSeedPlayers();
+		//seed players maybe?
 
 		this.started = true;
 		this.round_count = 1;

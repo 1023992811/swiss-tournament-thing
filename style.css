@@ -6,11 +6,6 @@ body {
   text-transform: capitalize;
 }
 
-#vangSwissRow {
-  margin-bottom: 0;
-  padding-bottom: 500px;
-}
-
 #vanguardApp {
   margin: 0 auto;
   margin-top: 5%;
@@ -73,4 +68,46 @@ body {
 
 .hidden {
 	display: none;
+}
+
+
+/* table stuff */
+
+.table {
+  display: flex;
+  flex-flow: column nowrap;
+  line-height: 1.5;
+  border: 0px;
+  flex: 1 1 auto;
+}
+
+.th {
+  display: none;
+  font-weight: 700;
+}
+
+.th > .td {
+  white-space: normal;
+  justify-content: center;
+}
+
+.tr {
+  width: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.td {
+  display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+  flex-basis: 0;
+  word-break: break-word;
+  padding: 0.25rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0px;
+  white-space: nowrap;
+  border: 0px;
+  vertical-align: middle;
 }
