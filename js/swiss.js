@@ -1,14 +1,14 @@
 let swissBracket = {
-	ended: false,
 	started: false,
-	roundCount: 0,
+	round_count: 0,
+	current_standings: [],
 
 	reset: function () {
 		//swissSeedPlayers();
 
-		this.ended = false;
 		this.started = true;
-		this.roundCount = 1;
+		this.round_count = 1;
+		this.current_standings = [];
 		playerPool.undropAllPlayers();
 		playerPool.resetAllPlayers();
 
@@ -29,17 +29,15 @@ let swissBracket = {
 	},
 
 	nextRound: function () {
-		this.roundCount++;
+		this.round_count++;
 		this.pairPlayers();
 	},
 
-	endBracket: function () {
-		this.ended = true;
-		this.swissInitialized = false;
+	update_standings: function () {
 		playerPool.updateTieBreakerScores();
-		playerPool.players = playerPool.players.sort(this.comparePlayersByTiebreak);
-		playerPool.droppedPlayers = playerPool.droppedPlayers.sort(this.comparePlayersByTiebreak);
-		playerPool.undropAllPlayers();
+		let players_in_play = duplicateList(playerPool.players);
+		this.standings = players_in_play.sort(this.comparePlayersByTiebreak);
+		this.standings = this.standings.concat(playerPool.droppedPlayers.sort(this.comparePlayersByTiebreak));
 	},
 
 	matchPlayersByScoreBuckets: function (playerPool) {

@@ -53,8 +53,8 @@
 						disabled=true>Drop Marked Players</button>
 					<button onclick="players_display.drop_and_next_round()" id="nextRoundButton" type="button" class="btn btn-secondary"
 						disabled=true>Drop Players And Next Round</button>
-					<button onclick="players_display.end_bracket()" id="endBracketButton" type="button" class="btn btn-secondary">End
-						Bracket</button>
+					<button onclick="players_display.toggle_standings()" id="toggleStandingsButton" type="button" class="btn btn-secondary">
+						Toggle Standings</button>
 				</div>
 			</div>
 		</div>
@@ -66,16 +66,6 @@
 		<script src="js/listUtils.js"></script>
 		<script src="js/playersDisplay.js"></script>
 		<script src="js/debugHelper.js"></script>
-		<script>
-			// input field triggered by enter
-			let input = document.getElementById("newPlayerNames");
-			input.addEventListener("keydown", (event) => {
-				if (event.keyCode === 13 && event.ctrlKey) {
-					event.preventDefault();
-					document.getElementById("addPlayerButton").click();
-				}
-			});
-		</script>
 		<!-- Boostrap -->
 		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
 			integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"

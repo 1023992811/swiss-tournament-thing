@@ -2,6 +2,8 @@ let players_display = {
 	players_list: document.getElementById("players"),
 	table_header: document.getElementById("vangSwissRow"),
 	
+	display_standings: false,
+	
 	pairs_list_header:
 		"<tr>\n" +
 		"<th>table number</th>" +
@@ -27,17 +29,13 @@ let players_display = {
 		"</tr>\n",
 	
 	update_display: function() {
-		let players = playerPool.players;
-		document.getElementById("nextRoundButton").disabled = swissBracket.ended;
-		document.getElementById("roundDisplay").innerHTML = "Round " + swissBracket.roundCount;
-		this.resize_players_display(players.length);
-		if (swissBracket.ended)
-			this.display_placement_list(players);
+		document.getElementById("roundDisplay").innerHTML = "Round " + swissBracket.round_count;
+		if (this.display_standings)
+			this.display_placement_list(swissBracket.standings);
 		else
-			this.display_pairs_list(players);
+			this.display_pairs_list(playerPool.players);
 		this.enable_drop_button();
 		this.enable_next_round_button();
-		this.enable_end_bracket_button();
 	},
 
 	resize_players_display: function(size) {
@@ -61,6 +59,7 @@ let players_display = {
 	display_pairs_list: function(players) {
 		this.table_header.innerHTML = this.pairs_list_header;
 
+		this.resize_players_display(players.length);
 		for (let x = 0; x < players.length; x++) {
 			this.display_pairs_list_row(x, players[x]);
 		}
@@ -127,6 +126,8 @@ let players_display = {
 
 	display_placement_list: function(players) {
 		this.table_header.innerHTML = this.placement_list_header;
+		
+		this.resize_players_display(players.length);
 		for (let x = 0; x < players.length; x++) {
 			this.display_placement_list_row(x, players[x]);
 		}
@@ -203,13 +204,19 @@ let players_display = {
 		this.update_display();
 	},
 
-	end_bracket: function() {
-		swissBracket.endBracket();
+	toggle_standings: function() {
+		if (this.display_standings) {
+			this.display_standings = false;
+		} else {
+			swissBracket.update_standings();
+			this.display_standings = true;
+		}
 		this.update_display();
 	},
 
 	enable_next_round_button: function() {
-		document.getElementById("nextRoundButton").disabled = !swissBracket.started;
+		let disabled = !swissBracket.started || this.display_standings;
+		document.getElementById("nextRoundButton").disabled = disabled;
 	},
 
 	enable_drop_button: function() {
@@ -221,11 +228,8 @@ let players_display = {
 				break;
 			}
 		}
+		disabled = disabled || this.display_standings;
 		document.getElementById("dropButton").disabled = disabled;
-	},
-	
-	enable_end_bracket_button: function() {
-		document.getElementById("endBracketButton").disabled = swissBracket.ended;
 	},
 
 	score_input_handler: function(event, score_input) {
@@ -293,3 +297,12 @@ let players_display = {
 		}
 	},
 }
+
+// input field triggered by enter
+let input = document.getElementById("newPlayerNames");
+input.addEventListener("keydown", (event) => {
+	if (event.keyCode === 13 && event.ctrlKey) {
+		event.preventDefault();
+		document.getElementById("addPlayerButton").click();
+	}
+});

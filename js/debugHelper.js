@@ -9,9 +9,9 @@ let debugHelper = {
 			uniquePairsCount += Number(players[x].isUniqueOpponent(players[x + 1]));
 		}
 		if (uniquePairsCount === pairsCount) {
-			console.info("Round " + String(swissBracket.roundCount) + ": All pairs are unique");
+			console.info("Round " + String(swissBracket.round_count) + ": All pairs are unique");
 		} else {
-			console.warn("Round " + String(swissBracket.roundCount) + ": (" + String(uniquePairsCount) + "/" + String(pairsCount) + ") pairs are unique");
+			console.warn("Round " + String(swissBracket.round_count) + ": (" + String(uniquePairsCount) + "/" + String(pairsCount) + ") pairs are unique");
 		}
 	}
 }
